@@ -5,20 +5,17 @@
 
 
 namespace abc {
-namespace Program {
 
-class Program : public abc::Configuration::Configurable {
+class Program : public Configurable {
 
 public:
-	Program(int& argc, char**& argv);
+	//Program(int& argc, char**& argv);
 	virtual void start() = 0;
 	virtual void end() = 0;
 
 };
 
 
-
-} // namespace Program
 } // namespace abc
 #endif // __ABC_PROGRAM_PROGRAM_HEADER__
 

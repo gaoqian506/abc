@@ -4,21 +4,21 @@
 #include "abc/program/program.h"
 
 namespace abc {
-namespace launcher {
 
+enum LaunchPlatform {
+	None, CommandLine, Socket, Html, Qt
+};
 
 
 class Launcher {
 
 public:
-	enum Platform {
-		None, CommandLine, Socket, Html, Qt
-	};
+
 
 	static int launch(Launcher* launcher);
-	static int launch(abc::program::Program* program, int platform);
+	static int launch(abc::Program* program, int platform);
 
-	static Launcher* factory(Platform platform);
+	static Launcher* factory(LaunchPlatform platform);
 	virtual int launch() = 0;
 
 private:
@@ -28,7 +28,6 @@ private:
 
 
 
-} // namespace launcher
 } // namespace abc
 #endif // __ABC_LAUNCHER_LAUNCHER_HEADER__
 

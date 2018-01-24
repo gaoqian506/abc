@@ -3,7 +3,6 @@
 
 
 namespace abc {
-namespace Configuration {
 
 
 
@@ -13,7 +12,6 @@ struct Configuration {
 
 
 
-} // namespace Configuration
 } // namespace abc
 #endif // __ABC_CONFIGURATION_CONFIGURATION_HEADER__
 

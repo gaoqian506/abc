@@ -2,28 +2,32 @@
 #define __ABC_LEARNING_DEEP_PROGRAM_HEADER__
 
 #include "abc/program/program.h"
+#include "abc/learning/deep/network.h"
 
 
 namespace abc {
-namespace learning {
-namespace deep {
 
-class Program : public abc::Program::Program {
+class DeepLearningProgram : public Program {
 
 public:
-	//virtual const Configuration& getConfiguration() = 0;
-	Program(int& argc, char** argv);
+
+	//DeepLearningProgram(int& argc, char**& argv);
+	DeepLearningProgram();
+
+	virtual void getInput() = 0;
+	virtual void getLabel() = 0;
+
 	virtual void start();
 	virtual void end();
 
+
+
 protected:
-	
+	Network* network;
 
 };
 
 
-} // namespace deep
-} // namespace learning
 } // namespace abc
 #endif // __ABC_LEARNING_DEEP_PROGRAM_HEADER__
 
