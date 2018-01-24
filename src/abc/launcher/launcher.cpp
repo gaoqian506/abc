@@ -3,14 +3,14 @@
 
 
 namespace abc {
-namespace Launcher {
+namespace launcher {
 
 
 int Launcher::launch(Launcher* launcher) {
 	return launcher->launch();
 }
 
-int Launcher::launch(Program* program, Platform platform) {
+int Launcher::launch(abc::program::Program* program, int platform) {
 	return 0;
 }
 
@@ -20,5 +20,5 @@ Launcher* Launcher::factory(Platform platform) {
 
 
 
-} // namespace Launcher
+} // namespace launcher
 } // namespace abc

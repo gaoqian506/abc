@@ -1,11 +1,10 @@
 #ifndef __ABC_LAUNCHER_LAUNCHER_HEADER__
 #define __ABC_LAUNCHER_LAUNCHER_HEADER__
 
-
-class Program;
+#include "abc/program/program.h"
 
 namespace abc {
-namespace Launcher {
+namespace launcher {
 
 
 
@@ -17,7 +16,8 @@ public:
 	};
 
 	static int launch(Launcher* launcher);
-	static int launch(Program* program, Platform platform);
+	static int launch(abc::program::Program* program, int platform);
+
 	static Launcher* factory(Platform platform);
 	virtual int launch() = 0;
 
@@ -28,7 +28,7 @@ private:
 
 
 
-} // namespace Launcher
+} // namespace launcher
 } // namespace abc
 #endif // __ABC_LAUNCHER_LAUNCHER_HEADER__
 
