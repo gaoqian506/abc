@@ -17,7 +17,8 @@ public:
 	void backward();
 
 protected:
-	caffe::Net* caffenet;
+
+	caffe::Net<float>* caffenet;
 
 };
 

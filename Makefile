@@ -3,10 +3,16 @@ NAME=abc
 SRC_DIR=src
 EXM_DIR=example
 LIB_DIR=lib
+CAFFE_ROOT=/home/gq/Documents/tools/caffe
+CUDA_ROOT=/usr/local/cuda
+
 
 SO=$(LIB_DIR)/lib$(NAME).so
 
 INCLUDES=-Iinclude
+INCLUDES+=-I$(CAFFE_ROOT)/include
+INCLUDES+=-I$(CAFFE_ROOT)/build/src
+INCLUDES+=-I$(CUDA_ROOT)/include
 LIBS=-Llib -labc
 
 
