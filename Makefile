@@ -45,7 +45,6 @@ EXMS=$(patsubst %.cpp,%,$(shell find $(EXM_DIR) -name *.cpp))
 
 all : dash_line $(EXMS)
 
-
 objs : dash_line $(OBJS)
 
 exms : dash_line $(EXMS)
@@ -59,10 +58,10 @@ $(EXMS) : % : %.cpp $(SO)
 	g++ -g $< $(LIBS) $(INCLUDES) $(FLAGS) -o $@
 
 $(SO) : $(OBJS)
-	g++ -g -fPIC -shared $(FLAGS) -o $@ $(OBJS) 
+	g++ -g -fPIC -shared $(FLAGS) $(OBJS)  -o $@
 
 %.o : %.cpp
-	g++ -c -g -fPIC $(FLAGS) $< $(INCLUDES) -o $@
+	g++ -c -g -fPIC $< $(FLAGS) $(INCLUDES) -o $@
 
 clean: clean_objs clean_sos
 	rm -f $(EXMS)
