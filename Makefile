@@ -1,9 +1,23 @@
 
+CONFIG_FILE := Makefile.config
+ifeq ($(wildcard $(CONFIG_FILE)),)
+$(error $(CONFIG_FILE) not found.)
+endif
+include $(CONFIG_FILE)
+
+
+CAFFE_CONFIG_FILE := $(CAFFE_ROOT)/Makefile.config
+ifeq ($(wildcard $(CONFIG_FILE)),)
+$(error $(CAFFE_CONFIG_FILE) not found. See $(CONFIG_FILE).example.)
+endif
+include $(CAFFE_CONFIG_FILE)
+
+
+
 NAME=abc
 SRC_DIR=src
 EXM_DIR=example
 LIB_DIR=lib
-CAFFE_ROOT=/home/gq/Documents/tools/caffe
 CUDA_ROOT=/usr/local/cuda
 
 
@@ -14,6 +28,11 @@ INCLUDES+=-I$(CAFFE_ROOT)/include
 INCLUDES+=-I$(CAFFE_ROOT)/build/src
 INCLUDES+=-I$(CUDA_ROOT)/include
 LIBS=-Llib -labc
+FLAGS=-g
+
+ifeq ($(CPU_ONLY), 1)
+	FLAGS += -DCPU_ONLY
+endif
 
 
 #SRCS=$(shell find $(SRC_DIR) -name *.cpp)
@@ -37,13 +56,13 @@ dash_line :
 	@echo ----------------------------------
 
 $(EXMS) : % : %.cpp $(SO)
-	g++ -g $< $(LIBS) $(INCLUDES) -o $@
+	g++ -g $< $(LIBS) $(INCLUDES) $(FLAGS) -o $@
 
 $(SO) : $(OBJS)
-	g++ -g -fPIC -shared -o $@ $(OBJS) 
+	g++ -g -fPIC -shared $(FLAGS) -o $@ $(OBJS) 
 
 %.o : %.cpp
-	g++ -c -g -fPIC $< $(INCLUDES) -o $@
+	g++ -c -g -fPIC $(FLAGS) $< $(INCLUDES) -o $@
 
 clean: clean_objs clean_sos
 	rm -f $(EXMS)

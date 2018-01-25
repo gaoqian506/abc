@@ -27,6 +27,8 @@ public:
 	*/
 	virtual void end();
 
+	virtual void run();
+
 
 
 protected:
