@@ -10,8 +10,17 @@ class Program : public Configurable {
 
 public:
 	//Program(int& argc, char**& argv);
-	virtual void start() = 0;
-	virtual void end() = 0;
+
+	/**
+	* @brief deprecated from v1.0
+	*/
+	virtual void start();
+	/**
+	* @brief deprecated from v1.0
+	*/
+	virtual void end();
+
+	virtual int run();
 
 };
 
