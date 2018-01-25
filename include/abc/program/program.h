@@ -2,7 +2,7 @@
 #define __ABC_PROGRAM_PROGRAM_HEADER__
 
 #include "abc/configuration/configurable.h"
-
+#include "abc/configuration/configurator.h"
 
 namespace abc {
 
@@ -14,13 +14,15 @@ public:
 	/**
 	* @brief deprecated from v1.0
 	*/
-	virtual void start();
+	virtual void start() {}
 	/**
 	* @brief deprecated from v1.0
 	*/
-	virtual void end();
+	virtual void end() {}
 
-	virtual int run();
+	virtual int run(int configurators = Configurator::Console) {
+
+	}
 
 };
 

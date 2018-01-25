@@ -27,4 +27,15 @@ void DeepLearningProgram::start() {
 void DeepLearningProgram::end() {
 }
 
+void DeepLearningProgram::run() {
+	while(true) {
+		getInput();
+		network->setInput();
+		getLabel();
+		network->setLabel();
+		network->forward();
+		network->backward();
+	}
+}
+
 } // namespace abc

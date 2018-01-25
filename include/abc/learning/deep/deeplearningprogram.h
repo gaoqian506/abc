@@ -14,10 +14,17 @@ public:
 	//DeepLearningProgram(int& argc, char**& argv);
 	DeepLearningProgram();
 
-	virtual void getInput() = 0;
-	virtual void getLabel() = 0;
+	virtual void getInput(){ };
+	virtual void getLabel(){ };
 
+	/**
+	* @brief start method deprecated from v1.0
+	* use run
+	*/
 	virtual void start();
+	/**
+	* @brief end deprecated from v1.0
+	*/
 	virtual void end();
 
 
