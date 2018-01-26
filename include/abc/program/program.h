@@ -9,6 +9,7 @@ namespace abc {
 class Program : public Configurable {
 
 public:
+	Program() { }
 	//Program(int& argc, char**& argv);
 
 	/**
@@ -20,10 +21,7 @@ public:
 	*/
 	virtual void end() {}
 
-	virtual int run(int configurators = Configurator::Console) {
-
-	}
-
+	virtual int run(int configurators = Configurator::Console);
 };
 
 

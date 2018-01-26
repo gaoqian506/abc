@@ -28,7 +28,7 @@ INCLUDES+=-I$(CAFFE_ROOT)/include
 INCLUDES+=-I$(CAFFE_ROOT)/build/src
 INCLUDES+=-I$(CUDA_ROOT)/include
 LIBS=-Llib -labc
-FLAGS=-g
+FLAGS=-g -std=c++0x
 
 ifeq ($(CPU_ONLY), 1)
 	FLAGS += -DCPU_ONLY
@@ -38,10 +38,12 @@ endif
 #SRCS=$(shell find $(SRC_DIR) -name *.cpp)
 #OBJS=$(SRCS:%.cpp=%.o)
 
+
+
 OBJS=$(patsubst %.cpp,%.o,$(shell find $(SRC_DIR) -name *.cpp))
-
-
 EXMS=$(patsubst %.cpp,%,$(shell find $(EXM_DIR) -name *.cpp))
+
+
 
 all : dash_line $(EXMS)
 
@@ -74,5 +76,6 @@ clean_sos :
 
 look: dash_line
 	echo $(TEST)
-	echo $(EXAMPLES)
-	echo $(VPATH)
+	echo $(EXMS)
+	echo $(EXMOBJS)
+#	echo $(VPATH)

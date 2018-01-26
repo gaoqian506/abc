@@ -2,6 +2,9 @@
 #include "abc/learning/deep/raytracingprogram.h"
 
 
+/**
+* @brief deprecated from v1.0
+*/
 int main(int argc, char** argv) {
 
 	abc::RaytracingProgram program(argc, argv);

@@ -7,6 +7,10 @@
 
 namespace abc {
 
+/**
+*	@brief start method deprecated from v1.1.1
+**	use DlProgram instead
+*/
 class DeepLearningProgram : public Program {
 
 public:
