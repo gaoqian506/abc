@@ -27,8 +27,9 @@ INCLUDES=-Iinclude
 INCLUDES+=-I$(CAFFE_ROOT)/include
 INCLUDES+=-I$(CAFFE_ROOT)/build/src
 INCLUDES+=-I$(CUDA_ROOT)/include
-LIBS=-Llib -labc
-FLAGS=-g -std=c++0x
+LIBS=-Llib -labc -lcurses
+LIBS+=-Wl,-rpath,lib
+FLAGS=-g -pthread -std=c++0x
 
 ifeq ($(CPU_ONLY), 1)
 	FLAGS += -DCPU_ONLY

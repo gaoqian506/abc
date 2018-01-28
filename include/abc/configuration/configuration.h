@@ -29,6 +29,8 @@ public:
 
 	inline void addChild(Configuration c) { children_.push_back(c); }
 
+	Configuration* child(const char* name);
+
 protected:
 
 	Type type_;

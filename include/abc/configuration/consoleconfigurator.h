@@ -18,26 +18,15 @@ public:
 
 protected:
 
-	void init(Configurable* configurable);
-	void printCommand();
-	void appendChar(const char& ch);
-	void commit();
-	void promot();
-	void forward();
-	void moveup();
-	void movedown();
-	std::vector<std::string> match(Configuration* con, std::string word);
-	Configuration* find(Configuration* con, std::string word);
+	void exec(char* command);
+	Configuration* parse(char* command, std::vector<std::string>& args);
 
+	bool set(Configuration* configuration, std::vector<std::string>& args);
 
 	Configurable* configurable_;
 	Configuration* root_;
-	Configuration* current_;
 	bool exit_;
-	std::vector<char*> history_;
-	char* command_;
-	char* word_;
-	int cursor_;
+
 };
 
 

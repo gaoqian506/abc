@@ -1,7 +1,9 @@
 #include "abc/configuration/consoleconfigurator.h"
 
 #include <assert.h>
-#include <string.h>
+#include <string.h>		// cmpstr
+#include <iostream>     // std::cin, std::cout
+
 
 namespace abc {
 
@@ -9,119 +11,87 @@ ConsoleConfigurator::ConsoleConfigurator() {
 
 	configurable_ = 0;
 	root_ = 0;
-	current_ = 0;
 	exit_ = false;
-	command_ = (char*)malloc(MAX_COMMAND_LENGTH*sizeof(char));
-	word_ = command_;
 
 }
 
 void ConsoleConfigurator::begin(Configurable* configurable) {
 
-	init(configurable);
-	printCommand();
-	char ch;
-	while(ch = getchar()) {
-		appendChar(ch);
-		if (exit) { break; }
-	}
-
-
-}
-
-void ConsoleConfigurator::init(Configurable* configurable) {
 	configurable_ = configurable;
-	root_ = configurable->configuration();
-	current_ = root_;
-	exit_ = false;
-	history_.clear();
-	cursor_ = 0;
-	word_ = command_;
-	command_[cursor_] = 0;
-}
-void ConsoleConfigurator::printCommand() {
-	printf("%s%s", ">>>", command_);
-}
+	root_ = configurable_->configuration();
 
-void ConsoleConfigurator::appendChar(const char& ch) {
-	switch(ch) {
-	case '\n':
-		commit();
-		break;
-	case '\t':
-		promot();
-		break;
-	case '.':
-	case ' ':
-		forward();
-		break;
-	case 27:
-		moveup();
-		break;
-	case 28:
-		movedown();
-		break;
-	default:
-		putchar(ch);
-		if (ch == '\b' && cursor_ > 0) {
-			command_[--cursor_] = 0;
-		}
-		else {
-			command_[cursor_++] = ch;
-			command_[cursor_] = 0;
-			assert(cursor_ <= MAX_COMMAND_LENGTH);
-		}
+	char command[1024];
 
+	while(true) {
+		std::cin.getline(command, 1024);
+		exec(command);
+		if (exit_) { break; }
 	}
 }
 
+void ConsoleConfigurator::exec(char* command) {
 
-void ConsoleConfigurator::commit() {
-
-	if (strcmp(command_, "exit") == 0) {
+	if (strcmp(command, "exit") == 0) {
 		exit_ = true;
 		return;
 	}
-	if (current_ /*&& current->set(word_)*/) {
-		//configurable->configurationChanged(current_);
+
+	
+	std::vector<std::string> args;
+	Configuration* c = parse(command, args);
+	if (c && set(c, args)) {
+		//configurable->configurationChanged(c);
+		printf("%s", ">>>");
 	}
 
 }
-void ConsoleConfigurator::promot() {
 
-	if (current_) {
-		std::vector<std::string> candidates = match(current_, word_);
-		if (candidates.size() == 1) { 
-			//appendString(candidates[0]-word);
+Configuration* ConsoleConfigurator::parse(char* command, std::vector<std::string>& args) {
+
+	Configuration* current = root_;
+	while(*command == ' ' || *command == '\t')
+	{ command++; }
+
+	char* space = strchr(command, ' ');
+	if (space) { *space = 0; }
+
+	char* period;
+	while(period = strchr(command, '.')) {
+		*period = 0;
+		current = current->child(command);
+		if (!current) { 
+			printf("Configuration %s not found", command);
+			break;;
 		}
-		else if (candidates.size() > 1) {
-			//list（candidates);
-			//printCommand();
+		command = period+1;
+	}
+
+	current = current ? current->child(command) : current;
+
+	if (current && space) {
+		command = space;
+		while(*command == ' ' || *command == '\t') 
+		{ command++; }
+
+		while(space = strchr(command, ' ' )) {
+			*space = 0;
+			args->push_back(command);
+			command = space;
+			while(*command == ' ' || *command == '\t')
+			{ command++; }
+		}
+
+		if (command) {
+			args->push_back(command);
 		}
 	}
 
+	return 0; 
 }
 
-void ConsoleConfigurator::forward() {
+bool ConsoleConfigurator::set(Configuration* configuration, std::vector<std::string>& args) {
 
-	if (current_) {
-		current_ = find(current_, word_);
-	}
-
-}
-void ConsoleConfigurator::moveup() {
-
-}
-void ConsoleConfigurator::movedown() {
-
-}
-
-std::vector<std::string> ConsoleConfigurator::match(Configuration* con, std::string word) {
-	return std::vector<std::string>();
-}
-
-Configuration* ConsoleConfigurator::find(Configuration* con, std::string word) {
-	return 0;
+	return false;
 }
 
 
