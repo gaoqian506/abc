@@ -21,7 +21,7 @@ protected:
 	void exec(char* command);
 	Configuration* parse(char* command, std::vector<std::string>& args);
 
-	bool set(Configuration* configuration, std::vector<std::string>& args);
+	bool set(Configuration* configuration, const std::vector<std::string>& args);
 
 	Configurable* configurable_;
 	Configuration* root_;

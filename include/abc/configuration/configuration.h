@@ -23,7 +23,7 @@ public:
 		name_(name), type_(type) { }
 
 	inline std::string& name() { return name_; }
-	inline Type type() { return type_; }
+	inline Type& type() { return type_; }
 	inline std::string& text() { return text_; }
 	inline std::vector<std::string>& items() { return items_; }
 

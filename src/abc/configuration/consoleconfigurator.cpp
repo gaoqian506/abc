@@ -2,7 +2,8 @@
 
 #include <assert.h>
 #include <string.h>		// cmpstr
-#include <iostream>     // std::cin, std::cout
+#include <iostream>		// std::cin, std::cout
+#include <algorithm>	// std::find
 
 
 namespace abc {
@@ -23,6 +24,7 @@ void ConsoleConfigurator::begin(Configurable* configurable) {
 	char command[1024];
 
 	while(true) {
+		printf(">>>");
 		std::cin.getline(command, 1024);
 		exec(command);
 		if (exit_) { break; }
@@ -40,8 +42,7 @@ void ConsoleConfigurator::exec(char* command) {
 	std::vector<std::string> args;
 	Configuration* c = parse(command, args);
 	if (c && set(c, args)) {
-		//configurable->configurationChanged(c);
-		printf("%s", ">>>");
+		configurable_->configurationChanged(c);
 	}
 
 }
@@ -49,6 +50,7 @@ void ConsoleConfigurator::exec(char* command) {
 Configuration* ConsoleConfigurator::parse(char* command, std::vector<std::string>& args) {
 
 	Configuration* current = root_;
+	Configuration* temp;
 	while(*command == ' ' || *command == '\t')
 	{ command++; }
 
@@ -56,42 +58,64 @@ Configuration* ConsoleConfigurator::parse(char* command, std::vector<std::string
 	if (space) { *space = 0; }
 
 	char* period;
-	while(period = strchr(command, '.')) {
+	while(current && (period = strchr(command, '.'))) {
 		*period = 0;
-		current = current->child(command);
-		if (!current) { 
-			printf("Configuration %s not found", command);
-			break;;
+		temp = current->child(command);
+		if (!temp) {
+			printf("Configuration:%s not found in %s.\n", command, current->name().c_str());
 		}
+		current = temp;
 		command = period+1;
 	}
+	
+	if (current) {
+		temp = current->child(command);
+		if (!temp) {
+			printf("Configuration:%s not found in %s.\n", command, current->name().c_str());
+		}
+		current = temp;
+	}
 
-	current = current ? current->child(command) : current;
 
 	if (current && space) {
-		command = space;
+		command = space+1;
 		while(*command == ' ' || *command == '\t') 
 		{ command++; }
 
 		while(space = strchr(command, ' ' )) {
 			*space = 0;
-			args->push_back(command);
-			command = space;
+			args.push_back(command);
+			command = space+1;
 			while(*command == ' ' || *command == '\t')
 			{ command++; }
 		}
 
-		if (command) {
-			args->push_back(command);
+		if (*command) {
+			args.push_back(command);
 		}
 	}
+	
+	return current;
 
-	return 0; 
 }
 
-bool ConsoleConfigurator::set(Configuration* configuration, std::vector<std::string>& args) {
+bool ConsoleConfigurator::set(Configuration* configuration, const std::vector<std::string>& args) {
 
-	return false;
+	bool ok = false;
+	
+	switch(configuration->type()) {
+	case Configuration::Select:
+		std::vector<std::string>& items = configuration->items();
+		if (std::find(items.begin(), items.end(), args[0]) != items.end()) {
+			configuration->text() = args[0];
+			ok = true;
+		}
+		else {
+			printf("Option %s not found in selection %s.\n", args[0].c_str(), configuration->name().c_str());
+		}
+		break;
+	}
+	return ok;
 }
 
 

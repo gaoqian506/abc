@@ -27,7 +27,7 @@ INCLUDES=-Iinclude
 INCLUDES+=-I$(CAFFE_ROOT)/include
 INCLUDES+=-I$(CAFFE_ROOT)/build/src
 INCLUDES+=-I$(CUDA_ROOT)/include
-LIBS=-Llib -labc -lcurses
+LIBS=-Llib -labc
 LIBS+=-Wl,-rpath,lib
 FLAGS=-g -pthread -std=c++0x
 
