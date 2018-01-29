@@ -11,16 +11,29 @@ class DlProgram : public Program {
 
 public:
 
-	enum TrainFlag { Start, Pause, Resume, Stop };
-
 
 
 	DlProgram();
-	void train(TrainFlag flag = Start);
-	virtual void getInputAndLabel(
-		std::shared_ptr<caffe::Blob<DType>>& input, 
-		std::shared_ptr<caffe::Blob<DType>>& label
-	){ };
+
+	/**
+	* @brief deprecated from v1.1.1
+	*/
+	enum TrainFlag { Start, Pause, Resume, Stop };
+
+
+	enum TrainState { Training, TrainStoped };
+	enum TestState { Testing, TestStoped };
+
+	void train();
+	void test();
+	virtual void trainStep() {}
+	virtual void trainStep() {}
+
+	static void asyncTrain(DlProgram* program);
+	static void syncTrain(DlProgram* program);
+	static void asyncTest(DlProgram* program);
+	static void syncTest(DlProgram* program);
+
 
 	virtual bool configurationChanged(Configuration* configuration);
 
@@ -33,6 +46,8 @@ public:
 
 protected:
 	Network* network;
+	TrainState trainState_;
+	TestState testState_;
 
 };
 
