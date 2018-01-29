@@ -12,6 +12,15 @@ class Network {
 
 public:
 
+	Network(const std::string& ptfile);
+
+
+	void setBlob(const cv::Mat& mat, const std::string& name);
+	//void setBlob(caffe::Blob<DType> blob, const std::string& name);
+
+	/**
+	* @brief following four deprecated from v1.1.0
+	*/
 	void learn(
 		std::shared_ptr<caffe::Blob<DType>> input, 
 		std::shared_ptr<caffe::Blob<DType>> label);
@@ -29,7 +38,7 @@ protected:
 	void setInput(std::shared_ptr<caffe::Blob<DType>> input);
 	void setLabel(std::shared_ptr<caffe::Blob<DType>> label);
 
-	caffe::Net<DType>* caffenet;
+	caffe::Net<DType>* caffenet_;
 
 
 	

@@ -11,6 +11,8 @@ public:
 
 	MarkDetectionProgram(int argc, char** argv) {
 
+		network_ = new abc::Network("example/data/markdetect/net.pt");
+
 		abc::Configuration config_background_dir("background_dir", abc::Configuration::Text);
 		abc::Configuration config_mark_dir("mark_dir", abc::Configuration::Text);
 		abc::Configuration config_test_dir("test_dir", abc::Configuration::Text);
@@ -69,6 +71,7 @@ public:
 			label.setTo(classId, mask);
 		}
 
+		network_->setBlob(data, "data");
 		//network_->setBlob(abc::Converter::convert(data), "data");
 		//network_->setBlob(abc::Converter::convert(label), "label");
 

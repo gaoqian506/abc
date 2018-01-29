@@ -27,8 +27,10 @@ INCLUDES=-Iinclude
 INCLUDES+=-I$(CAFFE_ROOT)/include
 INCLUDES+=-I$(CAFFE_ROOT)/build/src
 INCLUDES+=-I$(CUDA_ROOT)/include
-LIBS=-Llib -labc -lopencv_core -lopencv_highgui
+LIBS=-Llib -labc -lcaffe -lopencv_core -lopencv_highgui
+LIBS+=-L$(CAFFE_ROOT)/build/lib
 LIBS+=-Wl,-rpath,lib
+LIBS+=-Wl,-rpath,$(CAFFE_ROOT)/build/lib
 FLAGS=-g -pthread -std=c++0x
 
 ifeq ($(CPU_ONLY), 1)
@@ -77,6 +79,9 @@ clean_sos :
 
 markdetect :
 	./example/markdetect example/data/markdetect/markdetect.config
+
+debug_markdetect :
+	gdb ./example/markdetect
 
 look: dash_line
 	echo $(TEST)

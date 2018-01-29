@@ -45,7 +45,7 @@ public:
 
 
 protected:
-	Network* network;
+	Network* network_;
 	TrainState trainState_;
 	TestState testState_;
 

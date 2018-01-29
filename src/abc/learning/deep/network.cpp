@@ -5,6 +5,18 @@
 namespace abc {
 
 
+Network::Network(const std::string& ptfile) {
+
+	caffenet_ = new caffe::Net<DType>(ptfile, caffe::TRAIN);
+}
+
+void Network::setBlob(const cv::Mat& mat, const std::string& name) {
+
+}
+
+//void Network::setBlob(caffe::Blob<DType> blob, const std::string& name) {
+
+//}
 
 void Network::learn(
 	std::shared_ptr<caffe::Blob<DType>> input, 

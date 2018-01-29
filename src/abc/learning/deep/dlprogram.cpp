@@ -4,7 +4,7 @@
 namespace abc {
 
 
-DlProgram::DlProgram() {
+DlProgram::DlProgram() : network_(0) {
 
 	trainState_ = TrainStoped;
 	testState_ = TestStoped;
