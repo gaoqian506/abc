@@ -12,9 +12,10 @@ class Image {
 
 public:
 
-	static cv::Mat read(const char* path, random = false, int* index);
-	static std::vector<std::string> find(const char* dir);
-	static void save(const char* path, const cv::Mat& mat);
+	//static cv::Mat read(const char* path);
+	static std::vector<std::string> find(const std::string& dir);
+	//static void save(const char* path, const cv::Mat& mat);
+	static cv::Mat overlap(const cv::Mat& back, const cv::Mat& fore);
 
 
 };

@@ -27,7 +27,7 @@ INCLUDES=-Iinclude
 INCLUDES+=-I$(CAFFE_ROOT)/include
 INCLUDES+=-I$(CAFFE_ROOT)/build/src
 INCLUDES+=-I$(CUDA_ROOT)/include
-LIBS=-Llib -labc
+LIBS=-Llib -labc -lopencv_core -lopencv_highgui
 LIBS+=-Wl,-rpath,lib
 FLAGS=-g -pthread -std=c++0x
 
@@ -74,6 +74,9 @@ clean_objs :
 
 clean_sos :
 	find -name "*.so" -type f -delete
+
+markdetect :
+	./example/markdetect example/data/markdetect/markdetect.config
 
 look: dash_line
 	echo $(TEST)

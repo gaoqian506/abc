@@ -27,16 +27,28 @@ DlProgram::DlProgram() {
 }
 
 bool DlProgram::configurationChanged(Configuration* configuration) {
+	
+	if (Program::configurationChanged(configuration)) {
+		return true;
+	}
+
 	if (configuration->name() == "train") {
-		if (configuration->text() == "start" && trainState_ == TrainStoped) {
-			trainState_ = Training;
-			DlProgram::ayncTrain(this);
+		if (configuration->text() == "start") {
+			if (trainState_ == TrainStoped) {
+				trainState_ = Training;
+				DlProgram::asyncTrain(this);
+				printf("Train started.\n");
+			}
+			else {
+				printf("Train already started.\n");
+			}
+
 		}
 	}
 	else 	if (configuration->name() == "test") {
 		if (configuration->text() == "start" && testState_ == TestStoped) {
 			testState_ = Testing;
-			DlProgram::ayncTest(this);
+			DlProgram::asyncTest(this);
 		}
 	}
 	else {
@@ -62,7 +74,8 @@ void DlProgram::test() {
 }
 
 void DlProgram::asyncTrain(DlProgram* program) {
-	std::thread thread(DlProgram::syncTrain, program);
+
+	std::thread* thread = new std::thread(DlProgram::syncTrain, program);
 }
 void DlProgram::syncTrain(DlProgram* program) {
 	program->train();

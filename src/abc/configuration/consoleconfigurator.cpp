@@ -4,6 +4,7 @@
 #include <string.h>		// cmpstr
 #include <iostream>		// std::cin, std::cout
 #include <algorithm>	// std::find
+#include <fstream>      // std::ifstream
 
 
 namespace abc {
@@ -29,6 +30,22 @@ void ConsoleConfigurator::begin(Configurable* configurable) {
 		exec(command);
 		if (exit_) { break; }
 	}
+}
+
+void ConsoleConfigurator::begin(Configurable* configurable, const std::string& filename) {
+
+	configurable_ = configurable;
+	root_ = configurable_->configuration();
+
+	std::ifstream file(filename, std::ifstream::in);
+	std::string line;
+	char command[1024];
+	while(std::getline(file, line))
+	{
+		strcpy(command, line.c_str());
+		exec(command);
+	}
+
 }
 
 void ConsoleConfigurator::exec(char* command) {
@@ -102,16 +119,25 @@ Configuration* ConsoleConfigurator::parse(char* command, std::vector<std::string
 bool ConsoleConfigurator::set(Configuration* configuration, const std::vector<std::string>& args) {
 
 	bool ok = false;
-	
+	std::vector<std::string>& items = configuration->items();
+
 	switch(configuration->type()) {
 	case Configuration::Select:
-		std::vector<std::string>& items = configuration->items();
-		if (std::find(items.begin(), items.end(), args[0]) != items.end()) {
+		if (args.size() > 0 && std::find(items.begin(), items.end(), args[0]) != items.end()) {
 			configuration->text() = args[0];
 			ok = true;
 		}
 		else {
 			printf("Option %s not found in selection %s.\n", args[0].c_str(), configuration->name().c_str());
+		}
+		break;
+	case Configuration::Text:
+		if (args.size() < 1) {
+			printf("Need a text argument for %s.\n", configuration->name().c_str());
+		}
+		else {
+			configuration->text() = args[0];
+			ok = true;
 		}
 		break;
 	}

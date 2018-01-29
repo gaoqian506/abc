@@ -27,7 +27,7 @@ public:
 	void train();
 	void test();
 	virtual void trainStep() {}
-	virtual void trainStep() {}
+	virtual void testStep() {}
 
 	static void asyncTrain(DlProgram* program);
 	static void syncTrain(DlProgram* program);

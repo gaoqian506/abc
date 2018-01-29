@@ -15,6 +15,7 @@ public:
 	ConsoleConfigurator();
 
 	virtual void begin(Configurable* configurable);
+	void begin(Configurable* configurable, const std::string& filename);
 
 protected:
 
