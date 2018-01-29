@@ -9,7 +9,7 @@ namespace abc {
 void Network::learn(
 	std::shared_ptr<caffe::Blob<DType>> input, 
 	std::shared_ptr<caffe::Blob<DType>> label) {
-
+	void setInput(caffe::Net<DType>* caffenet, std::shared_ptr<caffe::Blob<DType>> input);
 
 }
 

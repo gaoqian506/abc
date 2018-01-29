@@ -10,6 +10,8 @@ public:
 		std::shared_ptr<caffe::Blob<DType>>& label
 	) {
 
+		printf("MarkDetectionProgram::getInputAndLabel()\n");
+
 	}
 
 };
