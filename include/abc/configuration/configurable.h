@@ -14,7 +14,9 @@ class Configurable : public Asynchronous {
 
 public:
 
-	Configurable() {}
+	Configurable() {
+		configuration_ = make_shared<Configuration>(this, "root", Configuration::Category);
+	}
 
 	inline shared_ptr<Configuration> getConfiguration() 
 	{ return configuration_; }

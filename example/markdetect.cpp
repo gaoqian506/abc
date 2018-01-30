@@ -11,8 +11,7 @@ class MarkDetectionProgram : public DlProgram {
 
 public:
 
-	MarkDetectionProgram(int argc, char** argv) :
-		DlProgram() {
+	MarkDetectionProgram(int argc, char** argv) {
 
 		shared_ptr<Configuration> config_background_dir = 
 			make_shared<Configuration>(this, "background_dir", Configuration::Text);
@@ -27,6 +26,12 @@ public:
 		configuration_->addChild(config_mark_dir);
 		configuration_->addChild(config_test_dir);
 		configuration_->addChild(config_output_dir);
+
+		if (argc > 1) {
+
+			ConsoleConfigurator cc(configuration_);
+			cc.parseFile(argv[1]);
+		}
 	}
 
 	virtual void configurationChanged(shared_ptr<Configuration> configuration) {
@@ -44,11 +49,15 @@ public:
 			else if (configuration->name() == "output_dir") {
 				output_dir_ = configuration->text();
 			}
+			else {
+				DlProgram::configurationChanged(configuration);
+			}
 
 	}
 
 	// train step
 	virtual void trainStep() {
+
 		if (backgroundNames_.size() == 0 || markNames_.size() == 0) {
 			cout << "Please specify the backgournd and mark directory." << endl;
 		}
@@ -64,6 +73,8 @@ public:
 			cv::Mat mask = abc::Image::overlap(data, mark);
 			label.setTo(classId, mask);
 		}
+
+		cout << "train step.\n";
 
 		//network_->setBlob(data, "data");
 		//network_->setBlob(abc::Converter::convert(data), "data");

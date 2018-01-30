@@ -24,7 +24,7 @@ std::vector<std::string> Image::find(const std::string& directory) {
 				std::string filename = pDir->d_name;			
 				int idx = filename.rfind('.');
 				std::string exname = filename.substr(idx+1,filename.length());
-				if(exname == "jpg" || exname =="png") {
+				if(exname == "jpg" || exname =="png" || exname == "JPG" || exname =="PNG") {
 					list.push_back(directory + "/" + pDir->d_name);
 				}
 			}

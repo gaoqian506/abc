@@ -67,14 +67,14 @@ shared_ptr<Configuration> ConsoleConfigurator::parse(string& command, vector<str
 		confs.push_back(item);
 	}
 
-	while (getline(argsStream, item, '.')) {
+	while (getline(argsStream, item, ' ')) {
 		args.push_back(item);
 	}
 
 	for (vector<string>::iterator itr = confs.begin(); itr != confs.end(); itr++) {
 		temp = current->child(*itr);
 		if (!temp) {
-			cout << *itr << "not found in " << current->name() << endl;
+			cout << *itr << " not found in " << current->name() << endl;
 		}
 		else {
 			current = temp;
