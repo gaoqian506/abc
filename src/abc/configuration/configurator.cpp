@@ -3,31 +3,16 @@
 
 namespace abc {
 
-Configurator* Configurator::factory(Type type) {
 
-	Configurator* product;
+shared_ptr<Configurator> Configurator::factory(Type type, shared_ptr<Configuration> configuration) {
+
 	switch(type) {
 		case Console:
-			product = new ConsoleConfigurator();
-			break;
+			return make_shared<ConsoleConfigurator>(configuration);
 		default:
-			product = 0;
+			return shared_ptr<Configurator>();
 	}
-	return product;
 
-}
-
-void Configurator::asyncBegin(Configurator* configurator, 
-		Configurable* configurable) {
-
-	std::thread* thread = new std::thread(Configurator::syncBegin, configurator, configurable);
-
-	configurator->setThread(thread);
-
-}
-
-void Configurator::syncBegin(Configurator* configurator, Configurable* configurable) {
-	configurator->begin(configurable);
 }
 
 

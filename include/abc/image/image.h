@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 
+using namespace std;
 
 namespace abc {
 
@@ -12,9 +13,10 @@ class Image {
 
 public:
 
-	//static cv::Mat read(const char* path);
-	static std::vector<std::string> find(const std::string& dir);
-	//static void save(const char* path, const cv::Mat& mat);
+	// find images in dir
+	static vector<string> find(const string& dir);
+
+	// overlap object on background
 	static cv::Mat overlap(const cv::Mat& back, const cv::Mat& fore);
 
 

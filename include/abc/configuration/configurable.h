@@ -2,34 +2,31 @@
 #define __ABC_CONFIGURATION_CONFIGURABLE_HEADER__
 
 #include "configuration.h"
+#include "abc/asynchronous/asynchronous.h"
+
+using namespace std;
 
 namespace abc {
 
 
 
-class Configurable {
+class Configurable : public Asynchronous {
 
-	//virtual const Configuration& getConfiguration() = 0;
 public:
 
-	Configurable() {
-		configuration_ = new Configuration("root", Configuration::Category);
-	}
+	Configurable() {}
 
-	~Configurable() {
-		delete configuration_;
-	}
+	inline shared_ptr<Configuration> getConfiguration() 
+	{ return configuration_; }
 
-virtual bool configurationChanged(Configuration* configuration) {
-	return false;
-}
 
-inline Configuration* configuration() { return configuration_; }
-//inline Configuration& configuration() { return configuration_; }
+
+	virtual void configurationChanged(shared_ptr<Configuration> configuration) {}
+
 
 protected:
 
-	Configuration* configuration_;
+	shared_ptr<Configuration> configuration_;
 
 
 };

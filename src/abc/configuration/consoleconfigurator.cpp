@@ -1,125 +1,80 @@
 #include "abc/configuration/consoleconfigurator.h"
 
-#include <assert.h>
-#include <string.h>		// cmpstr
 #include <iostream>		// std::cin, std::cout
+#include <sstream>		// std::stringstream
 #include <algorithm>	// std::find
-#include <fstream>      // std::ifstream
-
 
 namespace abc {
 
-ConsoleConfigurator::ConsoleConfigurator() {
+void ConsoleConfigurator::parseFile(const std::string& name) {}
 
-	configurable_ = 0;
-	root_ = 0;
-	exit_ = false;
+void ConsoleConfigurator::begin(void* param){
 
-}
-
-void ConsoleConfigurator::begin(Configurable* configurable) {
-
-	configurable_ = configurable;
-	root_ = configurable_->configuration();
-
-	char command[1024];
-
-	while(true) {
+	string command;
+	while(!exit_) {
 		printf(">>>");
-		std::cin.getline(command, 1024);
+		getline(cin, command);
 		exec(command);
-		if (exit_) { break; }
 	}
 }
 
-void ConsoleConfigurator::begin(Configurable* configurable, const std::string& filename) {
+void ConsoleConfigurator::exec(string& command){
 
-	configurable_ = configurable;
-	root_ = configurable_->configuration();
-
-	std::ifstream file(filename, std::ifstream::in);
-	std::string line;
-	char command[1024];
-	while(std::getline(file, line))
-	{
-		strcpy(command, line.c_str());
-		exec(command);
-	}
-
-}
-
-void ConsoleConfigurator::exec(char* command) {
-
-	if (strcmp(command, "exit") == 0) {
+	if (command == "exit") {
 		exit_ = true;
 		return;
 	}
 
-	
 	std::vector<std::string> args;
-	Configuration* c = parse(command, args);
+	shared_ptr<Configuration> c = parse(command, args);
 	if (c && set(c, args)) {
-		configurable_->configurationChanged(c);
+		c->owner()->configurationChanged(c);
 	}
-
 }
 
-Configuration* ConsoleConfigurator::parse(char* command, std::vector<std::string>& args) {
+shared_ptr<Configuration> ConsoleConfigurator::parse(string& command, vector<string>& args){
 
-	Configuration* current = root_;
-	Configuration* temp;
-	while(*command == ' ' || *command == '\t')
-	{ command++; }
 
-	char* space = strchr(command, ' ');
-	if (space) { *space = 0; }
+	shared_ptr<Configuration> current = configuration_;
+	shared_ptr<Configuration> temp;
 
-	char* period;
-	while(current && (period = strchr(command, '.'))) {
-		*period = 0;
-		temp = current->child(command);
+	command.erase(0, command.find_first_not_of(" \t"));
+	command.erase(command.find_last_not_of(" \t")+1);
+
+	string confPart = command.substr(0, command.find_first_of(" \t"));
+	string argPart = command.substr(command.find_first_of(" \t")+1);
+
+	stringstream confStream(confPart);
+	stringstream argsStream(argPart);
+
+	vector<string> confs;
+	string item;
+	while (getline(confStream, item, '.')) {
+		confs.push_back(item);
+	}
+
+	while (getline(argsStream, item, '.')) {
+		args.push_back(item);
+	}
+
+	for (vector<string>::iterator itr = confs.begin(); itr != confs.end(); itr++) {
+		temp = current->child(*itr);
 		if (!temp) {
-			printf("Configuration:%s not found in %s.\n", command, current->name().c_str());
+			cout << *itr << "not found in " << current->name() << endl;
 		}
-		current = temp;
-		command = period+1;
-	}
-	
-	if (current) {
-		temp = current->child(command);
-		if (!temp) {
-			printf("Configuration:%s not found in %s.\n", command, current->name().c_str());
-		}
-		current = temp;
-	}
-
-
-	if (current && space) {
-		command = space+1;
-		while(*command == ' ' || *command == '\t') 
-		{ command++; }
-
-		while(space = strchr(command, ' ' )) {
-			*space = 0;
-			args.push_back(command);
-			command = space+1;
-			while(*command == ' ' || *command == '\t')
-			{ command++; }
-		}
-
-		if (*command) {
-			args.push_back(command);
+		else {
+			current = temp;
 		}
 	}
-	
+
 	return current;
 
 }
 
-bool ConsoleConfigurator::set(Configuration* configuration, const std::vector<std::string>& args) {
+bool ConsoleConfigurator::set(shared_ptr<Configuration>& configuration, const vector<string>& args){
 
 	bool ok = false;
-	std::vector<std::string>& items = configuration->items();
+	vector<string>& items = configuration->items();
 
 	switch(configuration->type()) {
 	case Configuration::Select:

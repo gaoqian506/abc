@@ -3,41 +3,40 @@
 
 #include <string>
 #include <vector>
+#include <memory>	// shared_ptr
+
+using namespace std;
 
 namespace abc {
 
-
+class Configurable;
 
 class Configuration {
 
 public:
 
-	enum Type {
-		Category,
-		Text,
-		Select,
-		Trigger
-	};
+	enum Type { Unknown = 0, Category, Text, Select, Trigger, Display };
 
-	Configuration(const char* name, Type type) : 
-		name_(name), type_(type) { }
+	Configuration(Configurable* owner, const string& name, Type type) : 
+		owner_(owner), name_(name), type_(type) { }
 
-	inline std::string& name() { return name_; }
+	inline Configurable* owner() { return owner_; }
+	inline string& name() { return name_; }
 	inline Type& type() { return type_; }
-	inline std::string& text() { return text_; }
-	inline std::vector<std::string>& items() { return items_; }
+	inline string& text() { return text_; }
+	inline vector<string>& items() { return items_; }
 
-	inline void addChild(Configuration c) { children_.push_back(c); }
+	shared_ptr<Configuration> child(const string& name);
+	inline void addChild(shared_ptr<Configuration>& c) { children_.push_back(c); }
 
-	Configuration* child(const char* name);
+private:
 
-protected:
-
+	Configurable* owner_;
 	Type type_;
-	std::string name_;
-	std::string text_;
-	std::vector<std::string> items_;
-	std::vector<Configuration> children_;
+	string name_;
+	string text_;
+	vector<string> items_;
+	vector<shared_ptr<Configuration>> children_;
 
 };
 

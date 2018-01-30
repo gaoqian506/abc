@@ -3,18 +3,17 @@
 namespace abc {
 
 
-Configuration* Configuration::child(const char* name) {
+shared_ptr<Configuration> Configuration::child(const string& name) {
 
-	Configuration* child = 0;
-	//if (type_ != Category) { return 0; }
-
-	for (std::vector<Configuration>::iterator itr = children_.begin(); itr != children_.end(); itr++) {
-		if (itr->name_ == name) { 
-			child = &(*itr);
-			break;
+	for (vector<shared_ptr<Configuration>>::iterator itr = children_.begin(); 
+		itr != children_.end(); itr++) {
+		if ((*itr)->name() == name) { 
+			return *itr;
 		}
 	}
-	return child;
+
+	return shared_ptr<Configuration>();
 }
+
 
 } // namespace abc

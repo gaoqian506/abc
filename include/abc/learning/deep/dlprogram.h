@@ -4,50 +4,28 @@
 #include "abc/program/program.h"
 #include "abc/learning/deep/network.h"
 
+#include <memory>	// std::shared_ptr
+
+using namespace std;
 
 namespace abc {
 
 class DlProgram : public Program {
 
 public:
-
-
+	enum State { Waiting = 0, Training, Testing };
 
 	DlProgram();
 
-	/**
-	* @brief deprecated from v1.1.1
-	*/
-	enum TrainFlag { Start, Pause, Resume, Stop };
 
+	// inherited from Configurable
+	virtual void configurationChanged(shared_ptr<Configuration> configuration);
 
-	enum TrainState { Training, TrainStoped };
-	enum TestState { Testing, TestStoped };
-
-	void train();
-	void test();
-	virtual void trainStep() {}
-	virtual void testStep() {}
-
-	static void asyncTrain(DlProgram* program);
-	static void syncTrain(DlProgram* program);
-	static void asyncTest(DlProgram* program);
-	static void syncTest(DlProgram* program);
-
-
-	virtual bool configurationChanged(Configuration* configuration);
-
-	/**
-	* @brief deprecated from v1.1.0
-	*/
-	virtual void getInput(){ };
-	virtual void getLabel(){ };
 
 
 protected:
-	Network* network_;
-	TrainState trainState_;
-	TestState testState_;
+	shared_ptr<Network> network_;
+	State state_;
 
 };
 

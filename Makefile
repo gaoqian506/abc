@@ -38,13 +38,9 @@ ifeq ($(CPU_ONLY), 1)
 endif
 
 
-#SRCS=$(shell find $(SRC_DIR) -name *.cpp)
-#OBJS=$(SRCS:%.cpp=%.o)
-
-
-
-OBJS=$(patsubst %.cpp,%.o,$(shell find $(SRC_DIR) -name *.cpp))
-EXMS=$(patsubst %.cpp,%,$(shell find $(EXM_DIR) -name *.cpp))
+HEADERS = $(shell find $(SRC_DIR) -name *.h)
+OBJS = $(patsubst %.cpp,%.o,$(shell find $(SRC_DIR) -name *.cpp))
+EXMS = $(patsubst %.cpp,%,$(shell find $(EXM_DIR) -name *.cpp))
 
 
 
@@ -54,6 +50,7 @@ objs : dash_line $(OBJS)
 
 exms : dash_line $(EXMS)
 
+
 so : dash_line $(SO)
 
 dash_line :
@@ -61,6 +58,8 @@ dash_line :
 
 $(EXMS) : % : %.cpp $(SO)
 	g++ -g $< $(LIBS) $(INCLUDES) $(FLAGS) -o $@
+
+
 
 $(SO) : $(OBJS)
 	g++ -g -fPIC -shared $(FLAGS) $(OBJS)  -o $@
@@ -77,7 +76,7 @@ clean_objs :
 clean_sos :
 	find -name "*.so" -type f -delete
 
-markdetect :
+run_markdetect :
 	./example/markdetect example/data/markdetect/markdetect.config
 
 debug_markdetect :

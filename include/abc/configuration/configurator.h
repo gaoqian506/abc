@@ -3,45 +3,24 @@
 
 #include "configurable.h"
 
-#include <thread>         // std::thread
-#include <assert.h>
 
 namespace abc {
 
 
-class Configurator {
+class Configurator : public Configurable {
 
 public:
 
-	Configurator() : thread_(0) { }
-	enum Type { 
-		None = 0,
-		Console = 1 << 0, 
-		Socket = 1 << 1, 
-		Html = 1 << 2, 
-		Last = 1 << 3 
-	};
+	Configurator(shared_ptr<Configuration> configuration) 
+		: configuration_(configuration) {}
+	enum Type { None = 0, Console = 1, Socket = 2, Html = 4, Last = 8 };
 
-	static Configurator* factory(Type type);
-	static void asyncBegin(Configurator* configurator, 
-		Configurable* configurable);
-	static void syncBegin(Configurator* configurator, 
-		Configurable* configurable);
-	inline void join() { 
-		assert(thread_ != 0);
-		thread_->join();
-	}
+	static shared_ptr<Configurator> factory(Type type, shared_ptr<Configuration> configuration);
 
-	virtual void begin(Configurable* configurable) { }
 
 protected:
+	shared_ptr<Configuration> configuration_;
 
-	inline void setThread(std::thread* thread) { 
-		assert(thread_ == 0);
-		thread_ = thread;
-	}
-
-	std::thread* thread_;
 };
 
 

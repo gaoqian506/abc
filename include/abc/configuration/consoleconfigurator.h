@@ -3,7 +3,11 @@
 
 #include "configurator.h"
 
-#define MAX_COMMAND_LENGTH 1024
+#include <string>
+#include <vector>
+
+
+using namespace std;
 
 namespace abc {
 
@@ -12,21 +16,24 @@ class ConsoleConfigurator : public Configurator {
 
 public:
 
-	ConsoleConfigurator();
+	ConsoleConfigurator(shared_ptr<Configuration> configuration) 
+		: Configurator(configuration) {}
 
-	virtual void begin(Configurable* configurable);
-	void begin(Configurable* configurable, const std::string& filename);
+	void parseFile(const std::string& name);
 
 protected:
 
-	void exec(char* command);
-	Configuration* parse(char* command, std::vector<std::string>& args);
+	// inherited from Asynchronous
+	virtual void begin(void* param);
 
-	bool set(Configuration* configuration, const std::vector<std::string>& args);
+	// execute a command when user commit
+	void exec(string& command);
 
-	Configurable* configurable_;
-	Configuration* root_;
-	bool exit_;
+	// parse the command into target and args
+	shared_ptr<Configuration> parse(string& command, vector<string>& args);
+
+	// set the args to target
+	bool set(shared_ptr<Configuration>& configuration, const vector<string>& args);
 
 };
 

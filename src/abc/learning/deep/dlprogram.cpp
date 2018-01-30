@@ -3,37 +3,23 @@
 
 namespace abc {
 
+DlProgram::DlProgram() : state_(Waiting) {
+		//network_ = make_shared<Network>();
+		//addChild(network_->configuration());
 
-DlProgram::DlProgram() : network_(0) {
-
-	trainState_ = TrainStoped;
-	testState_ = TestStoped;
-
-	Configuration configTrain("train", Configuration::Select);
-	configTrain.items().push_back("start");
-	configTrain.items().push_back("pause");
-	configTrain.items().push_back("resume");
-	configTrain.items().push_back("stop");
-	configuration()->addChild(configTrain);
-
-
-	Configuration configTest("test", Configuration::Select);
-	configTest.items().push_back("start");
-	configTest.items().push_back("pause");
-	configTest.items().push_back("resume");
-	configTest.items().push_back("stop");
-	configuration()->addChild(configTest);
-
+	shared_ptr<Configuration> configTrain = 
+		make_shared<Configuration>(this, "dl", Configuration::Select);
+	configTrain->items().push_back("train");
+	configTrain->items().push_back("test");
+	configTrain->items().push_back("stop");
+	configuration_->addChild(configTrain);
 }
 
-bool DlProgram::configurationChanged(Configuration* configuration) {
-	
-	if (Program::configurationChanged(configuration)) {
-		return true;
-	}
+void configurationChanged(shared_ptr<Configuration> configuration) {
 
-	if (configuration->name() == "train") {
-		if (configuration->text() == "start") {
+
+	if (configuration->name() == "dl") {
+		if (configuration->text() == "train") {
 			if (trainState_ == TrainStoped) {
 				trainState_ = Training;
 				DlProgram::asyncTrain(this);
@@ -54,7 +40,10 @@ bool DlProgram::configurationChanged(Configuration* configuration) {
 	else {
 		return false;
 	}
+
 }
+
+/*
 
 void DlProgram::train() {
 
@@ -87,7 +76,7 @@ void DlProgram::syncTest(DlProgram* program) {
 	program->test();
 }
 
-
+*/
 
 
 
