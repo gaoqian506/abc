@@ -3,10 +3,24 @@
 #include <iostream>		// std::cin, std::cout
 #include <sstream>		// std::stringstream
 #include <algorithm>	// std::find
+#include <fstream>      // std::ifstream
 
 namespace abc {
 
-void ConsoleConfigurator::parseFile(const std::string& name) {}
+void ConsoleConfigurator::parseFile(const std::string& name) {
+
+	ifstream file(name, ifstream::in);
+	if (file.is_open()) {
+		string command;
+		while(std::getline(file, command)) {
+			exec(command);
+		}
+	}
+	else {
+		cout << name << "not found." << endl;
+	}
+
+}
 
 void ConsoleConfigurator::begin(void* param){
 
@@ -83,12 +97,12 @@ bool ConsoleConfigurator::set(shared_ptr<Configuration>& configuration, const ve
 			ok = true;
 		}
 		else {
-			printf("Option %s not found in selection %s.\n", args[0].c_str(), configuration->name().c_str());
+			cout << args[0] << " not found in option " << configuration->name() << endl;
 		}
 		break;
 	case Configuration::Text:
 		if (args.size() < 1) {
-			printf("Need a text argument for %s.\n", configuration->name().c_str());
+			cout << "Need a text augrment for " << configuration->name() << endl;
 		}
 		else {
 			configuration->text() = args[0];

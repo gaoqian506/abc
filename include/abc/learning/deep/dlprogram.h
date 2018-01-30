@@ -24,6 +24,17 @@ public:
 
 
 protected:
+
+	// inherited from Asynchronous
+	virtual void begin(void* param);
+
+	// train step
+	virtual void trainStep() {}
+
+	// test step
+	virtual void testStep() {}
+
+
 	shared_ptr<Network> network_;
 	State state_;
 

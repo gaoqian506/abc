@@ -15,73 +15,41 @@ DlProgram::DlProgram() : state_(Waiting) {
 	configuration_->addChild(configTrain);
 }
 
-void configurationChanged(shared_ptr<Configuration> configuration) {
+void DlProgram::configurationChanged(shared_ptr<Configuration> configuration) {
 
 
 	if (configuration->name() == "dl") {
 		if (configuration->text() == "train") {
-			if (trainState_ == TrainStoped) {
-				trainState_ = Training;
-				DlProgram::asyncTrain(this);
-				printf("Train started.\n");
-			}
-			else {
-				printf("Train already started.\n");
-			}
-
+			state_ = Training;
+			asyncBegin();
+		}
+		else if (configuration->text() == "test") {
+			state_ = Testing;
+			asyncBegin();
+		}
+		else if (configuration->text() == "stop") {
+			state_ = Waiting;
 		}
 	}
-	else 	if (configuration->name() == "test") {
-		if (configuration->text() == "start" && testState_ == TestStoped) {
-			testState_ = Testing;
-			DlProgram::asyncTest(this);
+}
+
+void DlProgram::begin(void* param) {
+	while(state_ != Waiting) {
+		switch (state_) {
+		case Training:
+			trainStep();
+			break;
+		case Testing:
+			testStep();
+			break;
 		}
 	}
-	else {
-		return false;
-	}
-
 }
 
-/*
-
-void DlProgram::train() {
-
-
-	while(trainState_ == Training) {
-		trainStep();
-	}
-
-}
-
-void DlProgram::test() {
-
-	while(testState_ == Testing) {
-		testStep();
-	}
-
-}
-
-void DlProgram::asyncTrain(DlProgram* program) {
-
-	std::thread* thread = new std::thread(DlProgram::syncTrain, program);
-}
-void DlProgram::syncTrain(DlProgram* program) {
-	program->train();
-}
-void DlProgram::asyncTest(DlProgram* program) {
-	std::thread thread(DlProgram::syncTest, program);
-}
-void DlProgram::syncTest(DlProgram* program) {
-	program->test();
-}
-
-*/
 
 
 
 
-
-};
+} // namespace abc
 
 

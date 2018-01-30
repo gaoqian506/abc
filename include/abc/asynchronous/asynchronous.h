@@ -16,6 +16,7 @@ public:
 	void asyncBegin(void* param = 0) {
 		thread_ = make_shared<thread>(syncBegin, this, param);
 	}
+
 	void join() {
 		thread_->join();
 	}
