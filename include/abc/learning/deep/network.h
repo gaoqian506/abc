@@ -4,6 +4,7 @@
 #include "caffe/net.hpp"
 
 #include <memory>
+#include <opencv2/core/core.hpp>
 
 using namespace std;
 typedef float DType;
@@ -16,6 +17,9 @@ public:
 
 	Network(const std::string& ptfile);
 	void setBlob(const cv::Mat& mat, const std::string& name);
+
+	inline void forward() { caffenet_->Forward(); }
+	inline void backward() { caffenet_->Backward(); }
 
 
 protected:

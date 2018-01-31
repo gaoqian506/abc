@@ -12,7 +12,10 @@ class MarkDetectionProgram : public DlProgram {
 public:
 
 	MarkDetectionProgram(int argc, char** argv) : 
-		DlProgram("example/data/markdetect/net.pt") {
+		DlProgram("example/data/markdetect/fcn-16s.pt") {
+
+		int id = static_cast<int>(2.5);
+		cout << id << " id.\n";
 
 		shared_ptr<Configuration> config_background_dir = 
 			make_shared<Configuration>(this, "background_dir", Configuration::Text);
@@ -66,7 +69,7 @@ public:
 		int count = rand() % 10;
 		const std::string& backName = random(backgroundNames_);
 		cv::Mat data = cv::imread(backName);
-		cv::Mat label = cv::Mat(data.size(), CV_8U, 0);
+		cv::Mat label = cv::Mat(data.size(), CV_32F, cv::Scalar(0));
 		for (int i = 0; i < count; i++) {
 			const std::string& markName = random(markNames_);
 			cv::Mat mark = cv::imread(markName);
@@ -77,10 +80,19 @@ public:
 
 		cout << "train step.\n";
 
-		//network_->setBlob(data, "data");
+		data.convertTo(data, CV_32F, 1.0/255.0);
+		//label.convertTo(label, CV_32F, 1.0/255.0);
+
+		cout << "data type:" << data.type() << endl;
+		//cout << "label type:" << label.type() << endl;
+
+		network_->setBlob(data, "data");
+		network_->setBlob(label, "label");
 		//network_->setBlob(abc::Converter::convert(data), "data");
 		//network_->setBlob(abc::Converter::convert(label), "label");
 
+		network_->forward();
+		network_->backward();
 		//network->learn();
 	}
 
