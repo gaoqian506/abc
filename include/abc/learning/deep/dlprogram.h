@@ -15,7 +15,7 @@ class DlProgram : public Program {
 public:
 	enum State { Waiting = 0, Training, Testing };
 
-	DlProgram();
+	DlProgram(const string& netfile);
 
 
 	// inherited from Configurable

@@ -3,9 +3,11 @@
 
 namespace abc {
 
-DlProgram::DlProgram() : state_(Waiting) {
+DlProgram::DlProgram(const string& netfile) : state_(Waiting) {
 		//network_ = make_shared<Network>();
 		//addChild(network_->configuration());
+
+	network_ = make_shared<Network>(netfile);
 
 	shared_ptr<Configuration> configTrain = 
 		make_shared<Configuration>(this, "dl", Configuration::Select);

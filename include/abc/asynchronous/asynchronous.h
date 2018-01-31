@@ -21,7 +21,7 @@ public:
 		thread_->join();
 	}
 	
-	virtual void exit() {}
+	virtual void end() {}
 	
 
 protected:

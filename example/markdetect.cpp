@@ -11,7 +11,8 @@ class MarkDetectionProgram : public DlProgram {
 
 public:
 
-	MarkDetectionProgram(int argc, char** argv) {
+	MarkDetectionProgram(int argc, char** argv) : 
+		DlProgram("example/data/markdetect/net.pt") {
 
 		shared_ptr<Configuration> config_background_dir = 
 			make_shared<Configuration>(this, "background_dir", Configuration::Text);
