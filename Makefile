@@ -37,6 +37,10 @@ ifeq ($(CPU_ONLY), 1)
 	FLAGS += -DCPU_ONLY
 endif
 
+ifeq ($(OPENCV_VERSION), 3)
+	LIBS += -lopencv_imgcodecs
+	LIBS += -L/usr/local/lib
+endif
 
 HEADERS = $(shell find $(SRC_DIR) -name *.h)
 OBJS = $(patsubst %.cpp,%.o,$(shell find $(SRC_DIR) -name *.cpp))
