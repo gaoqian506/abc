@@ -3,6 +3,10 @@
 #include "abc/configuration/consoleconfigurator.h"
 
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <glog/logging.h>
+
+
 
 using namespace abc;
 using namespace std;
@@ -62,6 +66,9 @@ public:
 	// train step
 	virtual void trainStep() {
 
+		static int times = 0;
+
+
 		if (backgroundNames_.size() == 0 || markNames_.size() == 0) {
 			cout << "Please specify the backgournd and mark directory." << endl;
 		}
@@ -69,21 +76,34 @@ public:
 		int count = rand() % 10;
 		const std::string& backName = random(backgroundNames_);
 		cv::Mat data = cv::imread(backName);
+		double scale[2] = { 640.0 / data.cols, 640.0 / data.rows };
+		double mins = scale[0] < scale[1] ? scale[0] : scale[1];
+		cv::resize(data, data, cv::Size(), mins, mins);
+		LOG(INFO) << "Size:" << data.cols << " " << data.rows;
 		cv::Mat label = cv::Mat(data.size(), CV_32F, cv::Scalar(0));
 		for (int i = 0; i < count; i++) {
 			const std::string& markName = random(markNames_);
 			cv::Mat mark = cv::imread(markName);
-			int classId = parseClass(markName);
-			cv::Mat mask = abc::Image::overlap(data, mark);
+			int classId = 1;//parseClass(markName);
+			cv::Mat mask = abc::Image::overlap(data, mark, 0.3, 0.5);
 			label.setTo(classId, mask);
 		}
 
-		cout << "train step.\n";
+		if (times++ % 10 == 0) {
+			char name[512];
+			sprintf(name, "overlap_%d.jpg", times);
+			cv::imwrite(name, data);
+
+			sprintf(name, "label_%d.jpg", times);
+			cv::imwrite(name, label*255);
+		}
+
+		LOG(INFO) << "train step times:" << times;
 
 		data.convertTo(data, CV_32F, 1.0/255.0);
 		//label.convertTo(label, CV_32F, 1.0/255.0);
 
-		cout << "data type:" << data.type() << endl;
+		//cout << "data type:" << data.type() << endl;
 		//cout << "label type:" << label.type() << endl;
 
 		network_->setBlob(data, "data");

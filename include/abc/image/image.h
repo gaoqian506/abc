@@ -17,7 +17,7 @@ public:
 	static vector<string> find(const string& dir);
 
 	// overlap object on background
-	static cv::Mat overlap(const cv::Mat& back, const cv::Mat& fore);
+	static cv::Mat overlap(cv::Mat& back, const cv::Mat& fore, float minScale = 0.8f, float maxScale = 3.0f);
 
 
 };

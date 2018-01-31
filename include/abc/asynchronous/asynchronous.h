@@ -4,6 +4,8 @@
 
 #include <memory>	// shared_ptr
 #include <thread>	// thread
+#include <glog/logging.h>
+
 
 using namespace std;
 
@@ -13,8 +15,11 @@ class Asynchronous {
 
 public:
 
+	Asynchronous() : exit_(false) {}
+
 	void asyncBegin(void* param = 0) {
 		thread_ = make_shared<thread>(syncBegin, this, param);
+		LOG(INFO) << "A thread stated.";
 	}
 
 	void join() {

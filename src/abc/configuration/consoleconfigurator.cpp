@@ -5,6 +5,8 @@
 #include <algorithm>	// std::find
 #include <fstream>      // std::ifstream
 
+#include <glog/logging.h>
+
 namespace abc {
 
 void ConsoleConfigurator::parseFile(const std::string& name) {
@@ -24,12 +26,16 @@ void ConsoleConfigurator::parseFile(const std::string& name) {
 
 void ConsoleConfigurator::begin(void* param){
 
+	LOG(INFO) << "Waiting console command...";
+
 	string command;
 	while(!exit_) {
 		printf(">>>");
 		getline(cin, command);
 		exec(command);
 	}
+
+	LOG(INFO) << "Waiting console command exit.";
 }
 
 void ConsoleConfigurator::exec(string& command){

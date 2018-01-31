@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <glog/logging.h>
 
 namespace abc {
 
@@ -16,6 +17,7 @@ int Program::run(int configurators/* = Configurator::Console*/) {
 		if (i & configurators) {
 			std::shared_ptr<Configurator> c = 
 				Configurator::factory((Configurator::Type)i, configuration);
+			LOG(INFO) << "A Configurator(" << i << ") created.";
 			c->asyncBegin();
 			cs.push_back(c);
 		}
