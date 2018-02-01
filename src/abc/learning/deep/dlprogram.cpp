@@ -1,11 +1,18 @@
 #include "abc/learning/deep/dlprogram.h"
 
+#include "caffe/caffe.hpp"
+
 
 namespace abc {
 
 DlProgram::DlProgram(const string& netfile) : state_(Waiting) {
 		//network_ = make_shared<Network>();
 		//addChild(network_->configuration());
+
+	//caffe::Caffe::set_mode(caffe::Caffe::CPU);
+	//caffe::Caffe::set_mode(caffe::Caffe::GPU);
+	//caffe::Caffe::SetDevice(0);
+
 
 	network_ = make_shared<Network>(netfile);
 
@@ -15,6 +22,8 @@ DlProgram::DlProgram(const string& netfile) : state_(Waiting) {
 	configTrain->items().push_back("test");
 	configTrain->items().push_back("stop");
 	configuration_->addChild(configTrain);
+
+
 }
 
 void DlProgram::configurationChanged(shared_ptr<Configuration> configuration) {
@@ -36,6 +45,11 @@ void DlProgram::configurationChanged(shared_ptr<Configuration> configuration) {
 }
 
 void DlProgram::begin(void* param) {
+
+	caffe::Caffe::set_mode(caffe::Caffe::GPU);
+	caffe::Caffe::SetDevice(0);
+
+
 	while(state_ != Waiting) {
 		switch (state_) {
 		case Training:

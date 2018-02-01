@@ -79,7 +79,7 @@ public:
 		double scale[2] = { 640.0 / data.cols, 640.0 / data.rows };
 		double mins = scale[0] < scale[1] ? scale[0] : scale[1];
 		cv::resize(data, data, cv::Size(), mins, mins);
-		LOG(INFO) << "Size:" << data.cols << " " << data.rows;
+		//LOG(INFO) << "Size:" << data.cols << " " << data.rows;
 		cv::Mat label = cv::Mat(data.size(), CV_32F, cv::Scalar(0));
 		for (int i = 0; i < count; i++) {
 			const std::string& markName = random(markNames_);
@@ -112,7 +112,7 @@ public:
 		//network_->setBlob(abc::Converter::convert(label), "label");
 
 		network_->forward();
-		network_->backward();
+		//network_->backward();
 		//network->learn();
 	}
 

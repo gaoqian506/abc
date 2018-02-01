@@ -32,16 +32,25 @@ LIBS+=-lglog
 LIBS+=-L$(CAFFE_ROOT)/build/lib
 LIBS+=-Wl,-rpath,lib
 LIBS+=-Wl,-rpath,$(CAFFE_ROOT)/build/lib
-FLAGS=-g -pthread -std=c++0x
+FLAGS=-pthread -std=c++0x
 
 ifeq ($(CPU_ONLY), 1)
 	FLAGS += -DCPU_ONLY
+endif
+
+# Debugging
+ifeq ($(DEBUG), 1)
+	FLAGS += -DDEBUG -g -O0
+else
+	FLAGS += -DNDEBUG -O2
 endif
 
 ifeq ($(OPENCV_VERSION), 3)
 	LIBS += -lopencv_imgcodecs
 	LIBS += -L/usr/local/lib
 endif
+
+
 
 HEADERS = $(shell find $(SRC_DIR) -name *.h)
 OBJS = $(patsubst %.cpp,%.o,$(shell find $(SRC_DIR) -name *.cpp))
@@ -62,15 +71,15 @@ dash_line :
 	@echo ----------------------------------
 
 $(EXMS) : % : %.cpp $(SO)
-	g++ -g $< $(LIBS) $(INCLUDES) $(FLAGS) -o $@
+	g++ $< $(LIBS) $(INCLUDES) $(FLAGS) -o $@
 
 
 
 $(SO) : $(OBJS)
-	g++ -g -fPIC -shared $(FLAGS) $(OBJS)  -o $@
+	g++ -fPIC -shared $(FLAGS) $(OBJS)  -o $@
 
 %.o : %.cpp
-	g++ -c -g -fPIC $< $(FLAGS) $(INCLUDES) -o $@
+	g++ -c -fPIC $< $(FLAGS) $(INCLUDES) -o $@
 
 clean: clean_objs clean_sos
 	rm -f $(EXMS)
