@@ -1,16 +1,16 @@
 #include "abc/configuration/configurator.h"
 #include "abc/configuration/consoleconfigurator.h"
 
+
 namespace abc {
 
-
-shared_ptr<Configurator> Configurator::factory(Type type, shared_ptr<Configuration> configuration) {
+Configurator* Configurator::factory(Type type) {
 
 	switch(type) {
 		case Console:
-			return make_shared<ConsoleConfigurator>(configuration);
+			return new ConsoleConfigurator();
 		default:
-			return shared_ptr<Configurator>();
+			return 0;
 	}
 
 }

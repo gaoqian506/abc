@@ -2,24 +2,33 @@
 #define __ABC_CONFIGURATION_CONFIGURATOR_HEADER__
 
 #include "configurable.h"
+#include "configuration.h"
+#include "abc/asynchronous/runner.h"
 
 
 namespace abc {
 
 
-class Configurator : public Configurable {
+class Configurator : public Runner {
 
 public:
+	enum Type { None = 0, Console = 1, Last = 2 };
 
-	Configurator(shared_ptr<Configuration> configuration) 
-		: configuration_(configuration) {}
-	enum Type { None = 0, Console = 1, Socket = 2, Html = 4, Last = 8 };
+	virtual ~Configurator() {}
 
-	static shared_ptr<Configurator> factory(Type type, shared_ptr<Configuration> configuration);
+	static Configurator* factory(Type type);
+	inline void add_configuration(Configuration* configuration) {
+		configuration_->add_child(configuration);
+	}
 
 
 protected:
-	shared_ptr<Configuration> configuration_;
+	// have declered in Configurable.
+	//Configuration* configuration_;
+
+	/** @brief protected constructor, only can instantinate with factory or inherits. */
+	Configurator() {};	
+
 
 };
 

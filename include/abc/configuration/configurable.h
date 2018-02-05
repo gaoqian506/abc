@@ -1,34 +1,50 @@
 #ifndef __ABC_CONFIGURATION_CONFIGURABLE_HEADER__
 #define __ABC_CONFIGURATION_CONFIGURABLE_HEADER__
 
-#include "configuration.h"
-#include "abc/asynchronous/asynchronous.h"
 
-using namespace std;
+#include <string>	// std::string
+#include <memory>	// std::shared_ptr
+#include <glog/logging.h>
+
+
 
 namespace abc {
 
-
-
-class Configurable : public Asynchronous {
+class Configuration;
+class Configurable {
 
 public:
 
-	Configurable() {
-		configuration_ = make_shared<Configuration>(this, "root", Configuration::Category);
+	/** @brief constructor. */
+	Configurable();
+	/** @brief destructor. */
+	virtual ~Configurable();
+
+	/** @brief query method of name. */
+	inline const std::string& name() const { return name_; }
+
+	/** @brief query method of configuration. */
+	inline Configuration* configuration() const { return configuration_; }
+
+	/** @brief will be called by configurator. */
+	virtual void config(Configuration* configuration, const std::string& param) { 
+		// TODO implement this func when add some configurtions;
+		LOG(INFO) << "Should implement this func when add some configurtions.";
 	}
 
-	inline shared_ptr<Configuration> getConfiguration() 
-	{ return configuration_; }
 
-
-
-	virtual void configurationChanged(shared_ptr<Configuration> configuration) {}
 
 
 protected:
+	Configuration* configuration_;
+	inline void add_configuration_for_auto_release(Configuration* configuration) {
+		configuration_auto_release.push_back(configuration);
+	}
+	inline void set_name(const std::string& name) { name_ = name; }
 
-	shared_ptr<Configuration> configuration_;
+private:
+	std::string name_;
+	std::vector<Configuration*> configuration_auto_release;
 
 
 };

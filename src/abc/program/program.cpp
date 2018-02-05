@@ -1,32 +1,54 @@
 #include "abc/program/program.h"
+#include "abc/configuration/configurator.h"
 
 #include <vector>
 #include <memory>
-#include <glog/logging.h>
 
 namespace abc {
 
+Program::Program() {
+	set_name("program");
+	configuration_->name() = "program";
+}
 
 
-int Program::run(int configurators/* = Configurator::Console*/) {
+int Program::start(int configurators/* = Configurator::Console*/) {
 
-	std::vector<std::shared_ptr<Configurator>> cs;
-	std::shared_ptr<Configuration> configuration = getConfiguration();
 
 	for (int i = 1; i != Configurator::Last; i<<=1) {
 		if (i & configurators) {
-			std::shared_ptr<Configurator> c = 
-				Configurator::factory((Configurator::Type)i, configuration);
-			LOG(INFO) << "A Configurator(" << i << ") created.";
-			c->asyncBegin();
-			cs.push_back(c);
+			Configurator* c = Configurator::factory((Configurator::Type)i);
+			if (c) {
+				c->add_configuration(this->configuration());
+				//c->run();
+				configurators_[(Configurator::Type)i] = c;				
+			}
+
 		}
 	}
 
-	for (std::vector<std::shared_ptr<Configurator>>::iterator itr = cs.begin();
-		itr != cs.end(); itr++) {
-		(*itr)->join();
+	bool ok = after_started();
+
+	if (ok) {
+		for (std::map<Configurator::Type, Configurator*>::iterator itr 
+			= configurators_.begin(); itr != configurators_.end(); itr++) {
+			itr->second->run();
+		}
+
+		for (std::map<Configurator::Type, Configurator*>::iterator itr 
+			= configurators_.begin(); itr != configurators_.end(); itr++) {
+			itr->second->join();
+		}
+
 	}
+
+	for (std::map<Configurator::Type, Configurator*>::iterator itr 
+		= configurators_.begin(); itr != configurators_.end(); itr++) {
+		delete itr->second;
+	}
+
+	configurators_.clear();
+	return ok;
 
 }
 

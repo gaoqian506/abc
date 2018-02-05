@@ -1,10 +1,10 @@
-#ifndef __ABC_CONFIGURATION_CONSOLE_CONFIGURATOR_HEADER__
-#define __ABC_CONFIGURATION_CONSOLE_CONFIGURATOR_HEADER__
+#ifndef __ABC_CONFIGURATION_CONSOLE__CONFIGURATOR_HEADER__
+#define __ABC_CONFIGURATION_CONSOLE__CONFIGURATOR_HEADER__
 
 #include "configurator.h"
 
-#include <string>
-#include <vector>
+// #include <string>
+// #include <vector>
 
 
 using namespace std;
@@ -16,29 +16,37 @@ class ConsoleConfigurator : public Configurator {
 
 public:
 
-	ConsoleConfigurator(shared_ptr<Configuration> configuration) 
-		: Configurator(configuration) {}
+	ConsoleConfigurator();
+	virtual ~ConsoleConfigurator();
 
-	void parseFile(const std::string& name);
-
-protected:
-
-	// inherited from Asynchronous
-	virtual void begin(void* param);
+	bool parse_file(const std::string& name);
 
 	// execute a command when user commit
-	void exec(string& command);
+	void exec(const string& command);	
+
+private:
+
+	// inherited from Runner
+	virtual bool step();
+
+
 
 	// parse the command into target and args
-	shared_ptr<Configuration> parse(string& command, vector<string>& args);
+	Configuration* parse(const string& command, string& name, string& param);
 
-	// set the args to target
-	bool set(shared_ptr<Configuration>& configuration, const vector<string>& args);
+	void print_configuration(const Configuration* configuration, int depth = 0) const;
+	void print_status(const Configuration* configuration, int depth = 0) const;
+	void exit();
+
+
+	// inherited from Configurable
+	virtual void config(Configuration* configuration, const std::string& param);
+
 
 };
 
 
 
 } // namespace abc
-#endif // __ABC_CONFIGURATION_CONFIGURATOR_HEADER__
+#endif // __ABC_CONFIGURATION_CONSOLE__CONFIGURATOR_HEADER__
 

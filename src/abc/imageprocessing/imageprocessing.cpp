@@ -1,14 +1,17 @@
-#include "abc/image/image.h"
+#include "abc/imageprocessing/imageprocessing.h"
 
 
 #include <dirent.h>
 #include <sys/types.h>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 namespace abc {
 
+cv::RNG ImageProcessing::rng = cv::RNG((unsigned)time(NULL));
 
-std::vector<std::string> Image::find(const std::string& directory) {
+
+std::vector<std::string> ImageProcessing::find(const std::string& directory) {
 
 	std::vector<std::string> list;
 
@@ -39,9 +42,10 @@ std::vector<std::string> Image::find(const std::string& directory) {
 }
 
 
-cv::Mat Image::overlap(cv::Mat& back, const cv::Mat& fore, float minScale, float maxScale) {
+cv::Mat ImageProcessing::overlap(cv::Mat& back, const cv::Mat& fore, float minScale, float maxScale) {
 
-	cv::RNG rng((unsigned)time(NULL));
+	//cv::RNG rng((unsigned)time(NULL));
+	//cv::RNG rng;
 
 	int angle = rng.uniform(0, 360);
 	double scale1 = rng.uniform(minScale, maxScale);//浮点随机数
@@ -51,7 +55,7 @@ cv::Mat Image::overlap(cv::Mat& back, const cv::Mat& fore, float minScale, float
 	if(scale1*fore.cols <= fore.cols){
 		center = cv::Point2f(fore.cols*0.5, fore.rows*0.5);
 		fore.copyTo(foreCut);
-		mask_cut = cv::Mat(fore.size(),CV_8U,cv::Scalar(1));
+		mask_cut = cv::Mat(fore.size(),CV_8U,cv::Scalar(255));
 	}else{
 		float distance = sqrtf(powf((scale1*fore.cols),2) + powf((scale1*fore.rows),2));
 		int width = distance;
@@ -62,7 +66,7 @@ cv::Mat Image::overlap(cv::Mat& back, const cv::Mat& fore, float minScale, float
 		foreCut = cv::Mat(height,width,fore.type(),cv::Scalar(0));
 		fore.copyTo(foreCut.rowRange(y1,y1+fore.rows).colRange(x1,x1+fore.cols));
 		mask_cut = cv::Mat(height,width,CV_8U,cv::Scalar(0));
-		mask_cut.rowRange(y1,y1+fore.rows).colRange(x1,x1+fore.cols) = cv::Scalar(1);//输出图像验证正确
+		mask_cut.rowRange(y1,y1+fore.rows).colRange(x1,x1+fore.cols) = cv::Scalar(255);//输出图像验证正确
 	}
 	cv::Mat H = cv::getRotationMatrix2D(center,angle,scale1);
 	cv::Mat out_warp;
@@ -84,13 +88,51 @@ cv::Mat Image::overlap(cv::Mat& back, const cv::Mat& fore, float minScale, float
 		cv::Vec3b* obj = out_warp.ptr<cv::Vec3b>(y-rect.y);
 		uchar* p_mask = mask.ptr<uchar>(y);
 		for(int x = rect.x; x < rect.x+rect.width; x++){
-			if(p_mask[x] == 1)
+			if(p_mask[x] == 255)
 				src[x] = obj[x-rect.x];
 		}
 	}
 
 	return mask;
 }
+
+
+cv::Mat ImageProcessing::random_read(const std::vector<std::string>& names, int* selected_id/* = 0*/) {
+
+	cv::Mat image;
+	if (names.size() > 0) {
+		int id = rand() % names.size();
+		const std::string& name = names[id];
+		image = cv::imread(name);
+		if (selected_id) { *selected_id = id; }
+	}
+	return image;
+
+}
+
+
+cv::Mat ImageProcessing::resize(const cv::Mat m, int max_size) {
+
+
+	double scale[2] = { (double)max_size / m.cols, (double)max_size / m.rows };
+	double mins = scale[0] < scale[1] ? scale[0] : scale[1];
+	cv::Mat out;
+	cv::resize(m, out, cv::Size(), mins, mins);
+
+	return out;
+}
+
+
+cv::Mat ImageProcessing::convert(const cv::Mat m, int rtype, double alpha, double beta) {
+	cv::Mat out;
+	m.convertTo(out, rtype, 1.0/255.0);
+	return out;
+}
+
+void ImageProcessing::save(const std::string& name, const cv::Mat& image) {
+	cv::imwrite(name, image);
+}
+
 
 
 };

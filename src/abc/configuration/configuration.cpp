@@ -2,7 +2,7 @@
 
 namespace abc {
 
-
+/*
 shared_ptr<Configuration> Configuration::child(const string& name) {
 
 	for (vector<shared_ptr<Configuration>>::iterator itr = children_.begin(); 
@@ -14,6 +14,6 @@ shared_ptr<Configuration> Configuration::child(const string& name) {
 
 	return shared_ptr<Configuration>();
 }
-
+*/
 
 } // namespace abc
