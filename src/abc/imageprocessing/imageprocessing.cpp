@@ -134,6 +134,44 @@ void ImageProcessing::save(const std::string& name, const cv::Mat& image) {
 }
 
 
+int ImageProcessing::parse_num(const std::string& str,int npos,std::string parse_str)
+{
+	std::string dst = "";
+	int ridx1 = str.rfind('/');
+	int ridx2 = str.rfind('.');
+	if(ridx2 == -1)return -1;
+
+	char c[1024];
+	memset(c,0,sizeof(char)*1024);
+	std::string strsub = str.substr(ridx1+1,ridx2-ridx1-1);
+	strcpy(c,strsub.c_str());
+	char* p = strtok(c,parse_str.c_str());
+	int num_idx = -1;
+	while (p)
+	{
+		std::string tokstr = p;
+		bool bfind = true;
+		for(int i = 0; i < tokstr.length(); i++){
+			if(((int)tokstr.at(i)) < 48 || ((int)tokstr.at(i)) > 57){// 0 ~ 9
+				bfind = false;
+				break;
+			}
+		}
+		if(bfind){
+			num_idx++;
+			if(num_idx == npos){
+				dst = tokstr;
+				break;
+			}
+		}
+		p = strtok(NULL,parse_str.c_str());
+	}
+
+	if(dst == "")return -1;
+	return atoi(dst.c_str());
+}
+
+
 
 };
 

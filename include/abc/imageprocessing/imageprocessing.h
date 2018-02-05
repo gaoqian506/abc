@@ -27,7 +27,9 @@ public:
 
 	static cv::Mat convert(const cv::Mat m, int rtype, double alpha = 1, double beta = 0); 
 
-	static void save(const std::string& name, const cv::Mat& image);	
+	static void save(const std::string& name, const cv::Mat& image);
+
+	static int parse_num(const std::string& str,int npos = 0,std::string parse_str = "._-");
 
 
 private:

@@ -529,6 +529,21 @@ int main(int argc, char** argv) {
 		LOG(INFO) << "[ImagProcessing] overlap test passed";
 		LOG(INFO) << "[ImagProcessing] save test passed";
 
+
+		CHECK(abc::ImageProcessing::parse_num("example/data/mark/background/dsf12_234-567.789.jpg",0) == 234) << "ImageProcessing parse_num check failed.";
+		CHECK(abc::ImageProcessing::parse_num("example/data/mark/background/dsf12_234-567.789.jpg",4) == -1) << "ImageProcessing parse_num check failed.";
+		int a1 = abc::ImageProcessing::parse_num("example/data/mark/background/dsf12_234-567.789.jpg",0);
+		int a2 = abc::ImageProcessing::parse_num("example/data/mark/background/dsf12_234-567.789.jpg",2);
+		int a3 = abc::ImageProcessing::parse_num("example/data/mark/background/dsf12_234-567.789.jpg",3);
+		int a4 = abc::ImageProcessing::parse_num("aaa/bbb/000/111/ccc/abc123.456.789.jpg",0);
+
+		CHECK(a1 == 234) << "ImageProcessing parse_num check failed.";
+		CHECK(a2 == 789) << "ImageProcessing parse_num check failed.";
+		CHECK(a3 == -1) << "ImageProcessing parse_num check failed.";
+		CHECK(a4 == 456) << "ImageProcessing parse_num check failed.";
+		LOG(INFO) << "example/data/mark/background/dsf12_234-567.789.jpg";
+		LOG(INFO) << "ImageProcessing::parse_num out:"<<"\n"<<a1<<"\n"<<a2<<"\n"<<a3;
+
 	}
 
 
