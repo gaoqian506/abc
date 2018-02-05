@@ -22,7 +22,11 @@ public:
 	void release();
 	void setBlob(const cv::Mat& mat, const std::string& name);
 
-	inline void forward() { caffe_net_->Forward(); }
+	inline void forward() { 
+		LOG(INFO) << "[DeepNetwork] before forward.";
+		caffe_net_->Forward(); 
+		LOG(INFO) << "[DeepNetwork] after forward.";
+	}
 	inline void backward() { caffe_net_->Backward(); }
 
 

@@ -31,6 +31,8 @@ void DeepNetwork::release() {
 
 void DeepNetwork::setBlob(const cv::Mat& mat, const std::string& name) {
 
+	LOG(INFO) << "[DeepNetwork] before set blob.";
+
 	CHECK(mat.type() % 8 == CV_32F) << "[DeepNetwork] Need a 32F typeof mat when set blob.";
 
 	caffe::Blob<DType>* blob = caffe_net_->blob_by_name(name).get();
@@ -43,7 +45,7 @@ void DeepNetwork::setBlob(const cv::Mat& mat, const std::string& name) {
 	unsigned int size = mat.step[0]*mat.rows;
 	CHECK(blob) << "[DeepNetwork] Blob size not match image's length of data.";
 	memcpy(blob->mutable_cpu_data(), mat.data, size);
-
+	LOG(INFO) << "[DeepNetwork] after set blob.";
 }
 
 

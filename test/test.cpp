@@ -610,7 +610,7 @@ int main(int argc, char** argv) {
 				console->exec("help");
 				LOG(INFO) << "[TestMark]'s Console help command test passed.";
 
-
+				std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
 				return false;
 			}
@@ -619,7 +619,7 @@ int main(int argc, char** argv) {
 		const char* args[2] = { "test/test", "example/data/mark/mark.config" };
 		TestMark test_mark(2, args);
 		test_mark.start();
-
+		//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 		LOG(INFO) << "[TestMark] Testing passed.";
 
 

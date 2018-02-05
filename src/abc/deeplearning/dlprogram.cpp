@@ -29,6 +29,8 @@ DlProgram::DlProgram() {
 		"status", "waiting", "Training, testing or waiting.");
 	status_use_gpu_ = new Configuration(this, Configuration::Status, 
 		"use_gpu", "true", "Using GPU when train or test.");	
+	Configuration* status_gpu_count = new Configuration(this, Configuration::Status, 
+		"gpu_count", std::to_string(gpu_count_), "GPU count in this machine.");
 
 	configuration_->add_child(action_train);
 	configuration_->add_child(action_test);
@@ -37,6 +39,7 @@ DlProgram::DlProgram() {
 	configuration_->add_child(text_gpu_id);
 	configuration_->add_child(status_status_);
 	configuration_->add_child(status_use_gpu_);
+	configuration_->add_child(status_gpu_count);
 
 	add_configuration_for_auto_release(action_train);
 	add_configuration_for_auto_release(action_test);
@@ -45,7 +48,7 @@ DlProgram::DlProgram() {
 	add_configuration_for_auto_release(text_gpu_id);
 	add_configuration_for_auto_release(status_status_);
 	add_configuration_for_auto_release(status_use_gpu_);
-
+	add_configuration_for_auto_release(status_gpu_count);
 
 	configuration_->child("run")->mute() = true;
 	configuration_->child("stop")->mute() = true;
@@ -105,7 +108,10 @@ void DlProgram::config(Configuration* configuration, const std::string& param) {
 					" is too large than gpu count[" << gpu_count()
 					<< "] or there is no gpu on this machine.";
 			}
-			else { set_gpu_id(id); }
+			else { 
+				set_gpu_id(id); 
+				configuration->text() = param;
+			}
 		}
 		catch (std::invalid_argument) {
 			LOG(INFO) << name() << ": please specify a valid number.";
@@ -131,6 +137,11 @@ bool DlProgram::beforeRuning() {
 		set_training(false);
 		set_testing(false);
 	}
+//LOG(INFO) << "-----------------------------------"<<use_gpu();
+	caffe::Caffe::set_mode(use_gpu() ? caffe::Caffe::GPU : caffe::Caffe::CPU);
+	caffe::Caffe::SetDevice(gpu_id());
+
+
 	return ok;
 }
 
@@ -152,6 +163,9 @@ bool DlProgram::check() {
 		LOG(INFO) << name() << ": gpu_id(" << gpu_id() <<
 			") is too large than " << gpu_count();
 		return false;
+	}
+	else if (use_gpu()) {
+		LOG(INFO) << name() << " will run in GPU mode.";
 	}
 	else if (!use_gpu()) {
 		LOG(WARNING) << name() << " will run in CPU mode.";	

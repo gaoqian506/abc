@@ -126,12 +126,18 @@ bool Mark::train_step() {
 
 	cv::Mat data_32f = abc::ImageProcessing::convert(data, CV_32F, 1.0/255.0);
 
+	if(caffe::Caffe::mode()== caffe::Caffe::GPU){
+		LOG(INFO) << "~~~~~~~~~~~~~[Mark] will train with GPU.";
+	}
+	else {
+		LOG(INFO) << "~~~~~~~~~~~~~~~~~[Mark] will train with CPU.";
+	}
 	network_->setBlob(data_32f, "data");
 	network_->setBlob(label, "label");
 
 
 	network_->forward();
-	//network_->backward();
+	network_->backward();
 	//network->learn();
 
 
