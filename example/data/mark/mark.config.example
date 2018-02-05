@@ -1,0 +1,5 @@
+mark.back_dir example/data/mark/background
+mark.mark_dir example/data/mark/mark
+mark.test_dir example/data/mark/test
+mark.out_dir example/data/mark/output
+mark.max_size 480
