@@ -90,7 +90,7 @@ private:
 		status_use_gpu_->text() = use_gpu_ ? "true" : "false";
 	}
 
-	inline const int& gpu_id(int id) const { return gpu_id_; }
+	inline const int& gpu_id() const { return gpu_id_; }
 	inline void set_gpu_id(int id) { gpu_id_ = id; }
 
 	inline const int& gpu_count() const { return gpu_count_; }

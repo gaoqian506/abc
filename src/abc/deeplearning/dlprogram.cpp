@@ -153,7 +153,7 @@ bool DlProgram::check() {
 			") is too large than " << gpu_count();
 		return false;
 	}
-	else if (!use_gpu) {
+	else if (!use_gpu()) {
 		LOG(WARNING) << name() << " will run in CPU mode.";	
 	}
 	else {
