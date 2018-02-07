@@ -4,3 +4,8 @@ Makefile.config
 *.png
 *.PNG
 *.config
+*.log.*
+*.ERROR
+*.FATAL
+*.INFO
+*.WARNING
