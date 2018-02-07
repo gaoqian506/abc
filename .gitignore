@@ -9,3 +9,9 @@ Makefile.config
 *.FATAL
 *.INFO
 *.WARNING
+*.aux
+*.bbl
+*.blg
+*.log
+*.pdf
+

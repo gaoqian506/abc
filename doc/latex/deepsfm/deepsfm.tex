@@ -1,0 +1,47 @@
+\documentclass{article}
+
+\usepackage{authblk}
+
+\title { A Deep Learning Method for Structure from Motion }
+% \date {2018 \\February}
+\author[1]{Gao Qian\thanks{gaoqian@buaa.edu.cn}}
+\author[1]{Shen Xukun\thanks{xkshen@buaa.edu.cn}}
+\author[2]{Niu Wensheng\thanks{nwsheng@avic.com}}
+\affil[1]{State Key Laboratory of Virtual Reality Technology and Systems, Beihang University, Beijing, China}
+\affil[2]{Key Lab of Aeronautics Computing Techinque, AVIC Computing Technique Research Institute, Xi'an, Shaanxi, China}
+
+
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+A deep method to estimate structure form motion. Use image sequence as input, and output camera pose, intrinsics and depth map for each image.
+
+\end{abstract}
+
+\section{Introduction}
+A deep method to estimate structure form motion.
+
+\section{Related Works}
+
+Recently, optical flow between two images has been obtained by networks such as FlowNet \cite {IMKDB17} and EpicFlow \cite {Revaud2015EpicFlow}. Homography between two images have also been estimated using deep networks in \cite {Detone2016Deep}. Nicolai, Skeele et al. applied deep earning techniques to learn odometry, but using laser data from a LIDAR \cite {Nicolai2016Laser} . The only visual odometry approach using deep learning that the authors are aware of the work of Konda and Memisevic \cite {Konda2015Learning}. Their approach however is limited to stereo visual odometry. \cite{Mohanty2016DeepVO} propose a Convolutional Neural Network architecture for VO.\par
+
+\cite {NIPS2017_6640} proposed system called a Learnt Stereo Machine (LSM) that can leverage monocular/semantic cues for single-view 3D reconstruction while also being able to integrate information from multiple viewpoints using stereopsis - all within a single end-to-end learnt deep neural network.
+
+Learning has been used for multi-view reconstruction in the form of shape priors for objects [2, 9, 58, 20, 27, 52], or semantic class specific surface priors for scenes [22, 17, 45]. These works use learnt shape models and either directly fit them to input images or utilize them in a joint representation that fuses semantic and geometric information. Most recently, CNN based learning methods have been proposed for 3D reconstruction by learning image patch similarity functions \cite {zbontar2016stereo} \cite {han2015matchnet} \cite {hartmann2017learned} and end-to-end disparity regression from stereo pairs \cite {mayer2016large} \cite {kendall2017end} . Approaches which predict shape from a single image have been proposed in form of direct depth map regression \cite {saxena2007depth} \cite {ladicky2014pulling} \cite {eigen2014depth}, generating multiple depth maps from novel viewpoints \cite {tatarchenko2016multi}, producing voxel occupancies \cite {choy20163d} \cite {girdhar2016learning}, geometry images \cite {sinha2016deep} and point clouds \cite {fan2017point}. \cite {flynn2016deepstereo} study a related problem of view interpolation, where a rough depth estimate is obtained within the system.\par
+
+\cite {zhao2017fully} present the results of experiments, in which we trained our system to perform real-time 3D semantic reconstruction for 23 different materials in a real-world application. The run-time performance of the system can be boosted to around 10Hz, using a conventional GPU, which is enough to achieve realtime semantic reconstruction using a 30fps RGB-D camera.
+
+Materials recognition is a challenging research topic due to wide variation in appearance within categories. Previous material recognition research predominantly focused on material classification, and did not achieve pixel-wise material segmentation. Most previous work employed hand-crafted visual features, e.g. reflectance-based edge features [16], variances of
+oriented gradients [17], and pairwise local binary patterns [18]. Recently CNN features \cite { schwartz2013visual} [20][21] have been employed to achieve the state-of-the-art results of material classification in many public material datasets. In addition to the 2D features, [9] combined 3D geometry (surface normals, camera intrinsic and extrinsic parameters) with 2D features (texture and color) to improve material classification.
+
+
+
+\bibliographystyle{unsrt}
+% \bibliography{docs/latex/deepsfm/deepsfm}
+\bibliography{doc/latex/deepsfm/deepsfm}
+
+\end{document}

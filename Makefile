@@ -19,6 +19,7 @@ SRC_DIR=src
 EXM_DIR=example
 TEST_DIR=test
 LIB_DIR=lib
+DOC_DIR=doc
 CUDA_ROOT=/usr/local/cuda
 
 
@@ -57,6 +58,7 @@ HEADERS = $(shell find $(SRC_DIR) -name *.h)
 OBJS = $(patsubst %.cpp,%.o,$(shell find $(SRC_DIR) -name *.cpp))
 EXMS = $(patsubst %.cpp,%,$(shell find $(EXM_DIR) -name *.cpp))
 TESTS = $(patsubst %.cpp,%,$(shell find $(TEST_DIR) -name *.cpp))
+PDFS = $(patsubst %.tex,%.pdf,$(shell find $(DOC_DIR) -name *.tex))
 
 
 
@@ -67,6 +69,8 @@ objs : dash_line $(OBJS)
 exms : dash_line $(EXMS)
 
 so : dash_line $(SO)
+
+pdfs : dash_line $(PDFS)
 
 dash_line :
 	@echo ----------------------------------
@@ -83,15 +87,34 @@ $(SO) : $(OBJS)
 %.o : %.cpp
 	g++ -c -fPIC $< $(FLAGS) $(INCLUDES) -o $@
 
-clean: clean_objs clean_sos
+%.pdf : %.tex %.bib
+	# xelatex -output-directory=$(dir $<) $<
+	xelatex -output-directory=$(dir $<) $<
+	@echo ----------------------------------
+	bibtex $(basename $<).aux
+	@echo ----------------------------------
+	xelatex -output-directory=$(dir $<) $<
+	@echo ----------------------------------
+	xelatex -output-directory=$(dir $<) $<
+	# pdftotext $(basename $<).pdf	
+
+clean: clean_objs clean_sos clean_log clean_aux
 	rm -f $(EXMS)
 	rm -f $(TESTS)
+	# rm -f $(PDFS)
 
 clean_objs :
 	find -name "*.o" -type f -delete
 
 clean_sos :
 	find -name "*.so" -type f -delete
+
+clean_tex :
+	find -name "*.log" -type f -delete
+	find -name "*.aux" -type f -delete
+	find -name "*.bbl" -type f -delete
+	find -name "*.blg" -type f -delete
+	find -name "*.pdf" -type f -delete
 
 run_mark :
 	./example/mark example/data/mark/mark.config
@@ -108,6 +131,8 @@ debug_test :
 
 
 look: dash_line
+	@ echo PDFS:
+	@ echo $(PDFS)
 	@ echo OBJS:
 	@ echo $(OBJS)
 	@ echo TESTS:
