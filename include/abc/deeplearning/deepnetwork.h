@@ -21,7 +21,7 @@ public:
 	void load(const std::string& net_file);
 	void release();
 	void setBlob(const cv::Mat& mat, const std::string& name);
-
+	caffe::Blob<DType>* getBlob(const std::string& name);
 	inline void forward() { 
 		LOG(INFO) << "[DeepNetwork] before forward.";
 		caffe_net_->Forward(); 

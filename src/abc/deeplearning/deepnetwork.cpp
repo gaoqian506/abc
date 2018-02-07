@@ -48,7 +48,13 @@ void DeepNetwork::setBlob(const cv::Mat& mat, const std::string& name) {
 	LOG(INFO) << "[DeepNetwork] after set blob.";
 }
 
-
+caffe::Blob<DType>* DeepNetwork::getBlob(const std::string& name){
+	caffe::Blob<DType>* blob = caffe_net_->blob_by_name(name).get();
+	LOG(INFO)<<blob->shape()[0]<<"  "<<blob->shape()[1]<<"  "<<blob->shape()[2]<<"  "<<blob->shape()[3];
+	//std::vector<int> shape = { 1, mat.channels(), mat.rows, mat.cols };
+	//blob->Reshape(shape);
+	return blob;
+}
 
 
 } // namespace abc

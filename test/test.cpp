@@ -556,8 +556,8 @@ int main(int argc, char** argv) {
 		class TestMark : public example::Mark {
 
 		public:
-			TestMark(const int& argc, const char** argv) : 
-				example::Mark(argc, argv) {}
+			TestMark(const char* config_file ) : 
+				example::Mark(config_file) {}
 
 		private:
 
@@ -602,22 +602,22 @@ int main(int argc, char** argv) {
 				LOG(INFO) << "[TestMark] Console's mark.test command test passed.";
 
 
-				console->exec("mark.train");
-				LOG(INFO) << "[TestMark] Console's mark.test command test passed.";	
+				//console->exec("mark.train");
+				//LOG(INFO) << "[TestMark] Console's mark.test command test passed.";	
 
 
 
 				console->exec("help");
 				LOG(INFO) << "[TestMark]'s Console help command test passed.";
 
-				std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+				std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 
 				return false;
 			}
 		};
 
 		const char* args[2] = { "test/test", "example/data/mark/mark.config" };
-		TestMark test_mark(2, args);
+		TestMark test_mark("example/data/mark/mark.config");
 		test_mark.start();
 		//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 		LOG(INFO) << "[TestMark] Testing passed.";

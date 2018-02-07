@@ -12,7 +12,7 @@ class Mark : public abc::DlProgram {
 
 public:
 
-	Mark(const int& argc, const char** argv);
+	Mark(const char* config_file = 0);
 	~Mark();
 
 	// inherited from DlProgram

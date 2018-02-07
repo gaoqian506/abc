@@ -561,7 +561,7 @@ layer {
     lr_mult: 0
   }
   convolution_param {
-    num_output: 21
+    num_output: 2
     bias_term: false
     kernel_size: 32
     stride: 16
@@ -589,3 +589,10 @@ layer {
     normalize: false
   }
 }
+layer {  
+  name: "norm"  
+  type: "Softmax"  
+  bottom: "score"  
+  top: "norm"  
+}  
+

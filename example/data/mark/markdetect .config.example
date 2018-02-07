@@ -1,4 +1,0 @@
-background_dir example/data/markdetect/background
-mark_dir example/data/markdetect/mark
-test_dir example/data/markdetect/test
-output_dir example/data/markdetect/output

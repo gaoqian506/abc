@@ -110,6 +110,11 @@ cv::Mat ImageProcessing::random_read(const std::vector<std::string>& names, int*
 
 }
 
+cv::Mat ImageProcessing::read(const std::string& name) {
+
+	cv::Mat image = cv::imread(name);
+	return image;
+}
 
 cv::Mat ImageProcessing::resize(const cv::Mat m, int max_size) {
 

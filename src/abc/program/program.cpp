@@ -48,7 +48,7 @@ int Program::start(int configurators/* = Configurator::Console*/) {
 	}
 
 	configurators_.clear();
-	return ok;
+	return 0;
 
 }
 

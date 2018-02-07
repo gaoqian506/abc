@@ -18,7 +18,7 @@ public:
 
 	// randomly select a image name to read
 	static cv::Mat random_read(const std::vector<std::string>& names, int* selected_id = 0);
-	
+	static cv::Mat read(const std::string& name);
 
 	// overlap object on background
 	static cv::Mat overlap(cv::Mat& back, const cv::Mat& fore, float minScale = 0.8f, float maxScale = 3.0f);
